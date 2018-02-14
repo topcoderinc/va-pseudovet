@@ -1,0 +1,264 @@
+swagger: '2.0'
+info:
+  title: PseudoVet Dataset Generation REST API
+  description: |
+    REST API for the PseudoVet Dataset Generation.
+  version: "1.0.0"
+# the domain of the service, it will be updated in final deployment
+host: localhost
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /api/v1
+
+
+produces:
+  - application/json
+paths:
+
+  /datasetConfigurations:
+    put:
+      summary: Save DatasetConfiguration.
+      description: |
+        Save DatasetConfiguration.
+      tags:
+        - DatasetConfiguration
+      parameters:
+        - name: datasetConfiguration
+          in: body
+          description: The entity
+          required: true
+          schema:
+            $ref: '#/definitions/DatasetConfiguration'
+      responses:
+        200:
+          description: The operation succeeded.
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+
+    get:
+      summary: Get dataset configuration.
+      description: |
+        Get DatasetConfiguration.
+      tags:
+        - DatasetConfiguration
+      parameters:
+        - name: title
+          in: query
+          description: The dataset config title
+          required: true
+          type: string
+      responses:
+        200:
+          description: The operation succeeded. The entity will be returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DatasetConfiguration'
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: NOT FOUND - if the resource in request did not exist
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+
+  /datasetConfigurationFromFile:
+    post:
+      summary: Parse file to get DatasetConfiguration.
+      description: |
+        Parse file to get DatasetConfiguration.
+      tags:
+        - DatasetConfiguration
+      consumes:
+         - multipart/form-data
+      parameters:
+         - in: formData
+           name: datasetConfiguration
+           type: file
+           description: The file to upload.
+      responses:
+        200:
+          description: The operation succeeded. The entity will be returned.
+          schema:
+            $ref: '#/definitions/DatasetConfiguration'
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+
+  /generateDatasets:
+    put:
+      summary: Update UserPreferenceOptions.
+      description: |
+        Generate datasests.
+      tags:
+        - Dataset
+      parameters:
+        - name: title
+          in: query
+          description: The dataset config title
+          required: true
+          type: string
+      responses:
+        200:
+          description: The operation succeeded.
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+
+
+  /morbidities:
+    get:
+      summary: Get all morbidities for war era.
+      description: |
+        Get morbidities.
+      tags:
+        - DatasourcesData
+      parameters:
+        - name: warEra
+          in: query
+          type: string
+          required: true
+          description: the war era
+      responses:
+        200:
+          description: The operation succeeded. The entities will be returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/MorbdityData'
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+
+
+  /warEras:
+    get:
+      summary: Get all war eras.
+      description: |
+        Get all war eras.
+      tags:
+        - DatasourcesData
+      responses:
+        200:
+          description: The operation succeeded. The entities will be returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/WarEraInfo'
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+
+
+definitions:
+  DatasetConfiguration:
+    properties:
+      title:
+        type: string
+        description: The title.
+      warEra:
+        $ref: '#/definitions/WarEraInfo'
+      numberOfPatients:
+        type: integer
+        description: The number of patients.
+      maleRatio:
+        type: number
+        format: float
+        description: The male ratio.
+      femaleRatio:
+        type: number
+        format: float
+        description: The female ratio.
+      morbiditiesData:
+        type: array
+        items:
+          $ref: '#/definitions/MorbdityData'
+      outputFolder:
+        type: string
+        description: The output folder.
+      year:
+        type: integer
+        description: The year.
+
+  WarEraInfo:
+    properties:
+      warEra:
+        type: string
+        description: The name.
+      warEraCode:
+        type: string
+        description: The code.
+      warEraStartDate:
+        type: string
+        format: date
+        description: The start date.
+      warEraEndDate:
+        type: string
+        format: date
+        description: The end date.
+
+
+  MorbdityData:
+    properties:
+      name:
+        type: string
+        description: The name.
+      icd10Code:
+        type: string
+        description: The ICD-10 code.
+      percentOfPopulationWithDiagnosis:
+        type: number
+        format: float
+        description: The percent of population with diagnosis.
+      percentOfProbabilityToAcquireDiagnosis:
+        type: number
+        format: float
+        description: The percent of probability to acquire diagnosis.
+      numberOfEncounters:
+        type: integer
+        description: The number of encounters.
+      exclusionRules:
+        type: string
+        description: The morbidity exclusion rules. Should be in JS notation for expressions/logical operators.
+        example: gender == 'male' || (gender == 'female' && age <= 20)
+
+
+  Error:
+    properties:
+      message:
+        type: string
+        description: The error message.
+

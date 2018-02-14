@@ -1,0 +1,24 @@
+{
+  "femaleRatio": 30.1,
+  "maleRatio": 20.1,
+  "morbiditiesData": [
+    {
+      "exclusionRules": "gender == 'male' || (gender == 'female' && age <= 20)",
+      "icd10Code": "I25",
+      "name": "Chronic ischemic heart disease",
+      "numberOfEncounters": 0,
+      "percentOfPopulationWithDiagnosis": 0,
+      "percentOfProbabilityToAcquireDiagnosis": 0
+    }
+  ],
+  "numberOfPatients": 13,
+  "outputFolder": "/e/Reviews/PsuedoVet/API-Challenge/Subs/521740-jiangliwu/pseudoVet-backend/output/generatedDatasets",
+  "title": "config-01",
+  "warEra": {
+    "warEra": "World War II",
+    "warEraCode": "world_war_ii",
+    "warEraEndDate": "Tue, 31 Dec 1946 00:00:00 GMT",
+    "warEraStartDate": "Sun, 07 Dec 1941 00:00:00 GMT"
+  },
+  "year": 1993
+}
