@@ -111,7 +111,7 @@
 
                                     <effectiveTime>
                                         <!-- This equates to the time the concern was authored in the patient's chart. This may frequently be an EHR timestamp-->
-                                        <low value="{{effective_time | minus_random_days(50,100) | datetime_format('%Y%m%d') }}"/>
+                                        <low value="{{ effective_time | minus_random_days(50,100) | datetime_format('%Y%m%d') }}"/>
                                     </effectiveTime>
                                     <entryRelationship typeCode="SUBJ">
                                         <observation classCode="OBS" moodCode="EVN">

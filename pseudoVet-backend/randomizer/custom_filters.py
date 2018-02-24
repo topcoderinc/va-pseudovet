@@ -4,7 +4,7 @@ See http://jinja.pocoo.org/docs/2.10/api/#custom-filters for the
 explanation and how to create new filters.
 
 Methods in this file are automatically added to the Jinja2 environment
-by class Renderer __init__ (see renderer.py)
+by class Renderer __init__ (see renderer.py).
 """
 
 from datetime import timedelta

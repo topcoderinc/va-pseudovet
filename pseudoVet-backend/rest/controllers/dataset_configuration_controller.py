@@ -1,6 +1,6 @@
 """
-the dateset configuration controller
-this controller method handles request to save (create or update) the dataset config.
+The dataset configuration controller.
+Methods of this controller handle requests for saving (creating or updating) the dataset configuration.
 """
 from flask import request
 from flask.json import loads
@@ -13,8 +13,8 @@ from rest.services import dataset_configuration_service
 @rest_mapping('/datasetConfigurations', ['PUT'])
 def save():
     """
-    save request body json data set configuration to a json file store on local file system
-    :return: the saved data configuration json
+    Save request body JSON dataset configuration to a JSON file on the local file system
+    :return: the saved data configuration JSON
     """
     return dataset_configuration_service.save(request.get_json(force=True, silent=True))
 
@@ -22,19 +22,20 @@ def save():
 @rest_mapping('/datasetConfigurations', ['GET'])
 def get():
     """
-    get data set configurations by title , if title is None, that mean return all data set configurations
-    :return: the matched data set configurations
+    Get dataset configurations by title. If title is None, then return all existing dataset configurations.
+    :return: the JSON response with the matched dataset configurations
     """
     return dataset_configuration_service.get(request.args.get('title'))
 
 
 @rest_mapping('/datasetConfigurationFromFile', ['POST'])
-def get_from_file():
+def save_file():
     """
-    get request post file and check the file content, then save the content to a json file store on local file system
-    :return: the saved data set configuration json
+    Get a file from the request body and check its content, then save the content to a JSON file on the
+    local file system
+    :return: the saved dataset configuration JSON
     """
     config_file_obj = request.files.get('datasetConfiguration')
     if config_file_obj is None:
-        raise BadRequestError('cannot found file where key = datasetConfiguration')
+        raise BadRequestError('Dataset configuration file is missing in POST request')
     return dataset_configuration_service.save(loads(config_file_obj.read()))

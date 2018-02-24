@@ -1,18 +1,20 @@
 """
-the flask app entry py
+The entry module of the Flask web application.
+It starts Flask server and then listens to REST requests at port specified in pseudo_vets_config.py.
 """
 import os
 from http import HTTPStatus
 
 from flask import Flask
 
-from config import FLASK_RUN_MODE, WEB_PORT, DATESET_CONFIGURATIONS_DIR, GENERATED_DATASETS_DIR, BASE_YEAR
+from config import FLASK_RUN_MODE, WEB_PORT, DATASET_CONFIGURATIONS_DIR, GENERATED_DATASETS_DIR
 from rest.controllers import init
 from rest.errors import error_handler
 from rest.logger import logger
 from randomizer.pseudo_vets import setup_work_session
 
-app = Flask(__name__)  # create new flask app
+# create new Flask app
+app = Flask(__name__)
 
 
 @app.errorhandler(HTTPStatus.METHOD_NOT_ALLOWED)
@@ -21,23 +23,27 @@ app = Flask(__name__)  # create new flask app
 @app.errorhandler(Exception)
 def app_error_handler(err):
     """
-    handler all errors
+    Handle all errors
     :param err: the error instance
-    :return: the err json response
+    :return: the JSON response with error message
     """
     return error_handler(err)
 
 
-if __name__ == '__main__':  # start flask app
+if __name__ == '__main__':
+    # start flask app
 
-    logger.info('check output dir ...')
+    logger.info('Checking output directories...')
 
-    if not os.path.exists(DATESET_CONFIGURATIONS_DIR):  # check and create dirs
-        os.makedirs(DATESET_CONFIGURATIONS_DIR)
+    # check and create dirs
+    if not os.path.exists(DATASET_CONFIGURATIONS_DIR):
+        os.makedirs(DATASET_CONFIGURATIONS_DIR)
     if not os.path.exists(GENERATED_DATASETS_DIR):
         os.makedirs(GENERATED_DATASETS_DIR)
 
-    setup_work_session(GENERATED_DATASETS_DIR, BASE_YEAR)  # init randomizer
-    logger.info('starting app at port= ' + str(WEB_PORT) + ', with mode= ' + FLASK_RUN_MODE)
-    init(app)  # inject routers
+    # init randomizer
+    setup_work_session(GENERATED_DATASETS_DIR, create_session_path=False)
+    logger.info('Starting app at port = {0}, with mode = {1}'.format(WEB_PORT, FLASK_RUN_MODE))
+    # inject routers
+    init(app)
     app.run(debug=(FLASK_RUN_MODE == 'DEBUG'), port=int(WEB_PORT))  # start run app

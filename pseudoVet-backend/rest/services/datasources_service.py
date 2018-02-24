@@ -36,8 +36,8 @@ def get_morbidities_for_war_era(war_era):
 @service()
 def get_war_eras():
     """
-    get all war eras data
-    :return:  the war eras data
+    Get data for all war eras
+    :return:  the list with war eras data
     """
     war_list = get_wars_from_file()
     return list(map(lambda war: convert_raw_war(war), war_list))
@@ -45,12 +45,13 @@ def get_war_eras():
 
 def convert_raw_war(war):
     """
-    convert raw war to request war entity
+    Convert raw war to request war entity
     :param war: the raw war
     :return: the request war
     """
     return {
-        'warEra': war['war_name'], 'warEraCode': war['war_code'],
+        'warEra': war['war_name'],
+        'warEraCode': war['war_code'],
         'warEraStartDate': war['start_date'],
         'warEraEndDate': war['end_date']
     }
@@ -58,23 +59,24 @@ def convert_raw_war(war):
 
 def get_war_era_by_name(name):
     """
-    get war era by war name, it will raise 404 error if didn't found
-    :param name:  the war name
-    :return: the war era
+    Get war era by its name. Raises EntityNotFoundError if not found.
+    :param name: the war name
+    :return: the war era details
     """
     wars = get_wars_from_file()
     filter_wars = list(filter(lambda w: w['war_name'] == name, wars))
     if len(filter_wars) <= 0:
-        raise EntityNotFoundError('cannot found war era where name = ' + name)
+        raise EntityNotFoundError('Cannot find war era with name ' + name)
     return filter_wars[0]
 
 
-def get_morbidities_from_war_code(war_code):
+def get_morbidities_from_war_code(war_code, include_percentage=False):
     """
-    get morbidities from war code, if the result already cached, then return the cached result
-    and it will rasie 404 if didn't found
-    :param war_code:  the war code
-    :return: the morbidities data
+    Get morbidities by war code. If the result is already cached, then return the cached result.
+    If not found raise EntityNotFoundError
+    :param war_code: the war code
+    :param include_percentage: True if percentage of morbidity should be added to output, False otherwise
+    :return: the list with morbidities data
     """
     global morbidity_map
 
@@ -86,25 +88,27 @@ def get_morbidities_from_war_code(war_code):
         with open(file_path, 'rU') as csv_file:
             morbidity_raw_list = csv.reader(csv_file, delimiter=',', quotechar='"')
             morbidity_list = []
+            first = True
             for row in morbidity_raw_list:
-                if row[0] == 'Morbidity':  # skip first element
+                if first:  # skip first row with header
+                    first = False
                     continue
-                morbidity_list.append({
-                    'name': row[0],
-                    'icd10Code': row[1]
-                })
+                item = {'name': row[0], 'icd10Code': row[1]}
+                if include_percentage:
+                    item['percentOfProbabilityToAcquireDiagnosis'] = float(row[2])
+                morbidity_list.append(item)
             morbidity_map[war_code] = morbidity_list
             return morbidity_list
     except Exception as e:
         logger.error(e)
-        raise EntityNotFoundError('Could not open ' + file_path + ' Error: %s' % e)
+        raise EntityNotFoundError('Could not open {0}. Error: {1}'.format(file_path, e))
 
 
 def str_to_datetime(str_time):
     """
-    convert csv str time to datetime
-    :param str_time: the str time from csv file
-    :return:  the datetime or None
+    Convert CSV str time to datetime. If input is empty or None, return None.
+    :param str_time: the str time from CSV file
+    :return: the datetime or None
     """
     if str_time is None or str_time == '':
         return None
@@ -114,15 +118,17 @@ def str_to_datetime(str_time):
 
 def get_wars_from_file():
     """
-    get war eras from file, it will return cache result if data already cached
+    Get war eras from file. Return cache result if data is already cached.
     :return: the war eras
     """
     global military_eras
-    if military_eras is not None:  # return cached data
+    if military_eras is not None:
+        # return cached data
         return military_eras
 
     wars_data_path = DATASOURCES_DIR + '/military_eras.csv'
-    try:  # load the military_eras datasource
+    try:
+        # load the military_eras datasource
         with open(wars_data_path, 'rU') as csv_file:
             military_eras_list = csv.reader(csv_file, delimiter=',', quotechar='"')
             military_eras = []
@@ -143,4 +149,4 @@ def get_wars_from_file():
                                       "end_date": end_date})
             return military_eras
     except Exception as e:
-        logger.error('Could not open ' + wars_data_path + ' Error: %s' % e)
+        logger.error('Could not open {0}. Error: {1}'.format(wars_data_path, e))

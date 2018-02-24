@@ -1,14 +1,13 @@
 {
 	"info": {
 		"name": "pseudoVet-backend",
-		"_postman_id": "a3fe0df1-1d05-f0a5-63e0-31adf8e6e2d6",
+		"_postman_id": "6143d26b-7e46-fcc8-625d-ee0f2b958b0a",
 		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "errors",
-			"description": "",
 			"item": [
 				{
 					"name": "{{URL}}/datasetConfigurations - war not found",
@@ -22,10 +21,17 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War III\"\n\t},\n\t\"femaleRatio\":30.1,\n\t\"maleRatio\":20.1,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n\t\t\t\"percentOfPopulationWithDiagnosis\": 0,\n    \t\t\"percentOfProbabilityToAcquireDiagnosis\": 0,\n    \t\t\"numberOfEncounters\": 0,\n    \t\t\"exclusionRules\": \"gender == 'male' || (gender == 'female' && age <= 20)\",\n\t\t\t\"icd10Code\":\"I25\"\n\t\t}\n\t]\n}"
+							"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War III\"\n\t},\n\t\"maleRatio\":20,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n\t\t\t\"percentOfPopulationWithDiagnosisRisk\": 50,\n    \t\t\"percentOfProbabilityToAcquireDiagnosis\": 50,\n\t\t\t\"icd10Code\":\"I25\",\n\t\t\t\"name\":\"Chronic ischemic heart disease\"\n\t\t}\n\t]\n}"
 						},
-						"url": "{{URL}}/datasetConfigurations",
-						"description": ""
+						"url": {
+							"raw": "{{URL}}/datasetConfigurations",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"datasetConfigurations"
+							]
+						}
 					},
 					"response": []
 				},
@@ -41,10 +47,43 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War II\"\n\t},\n\t\"femaleRatio\":30.1,\n\t\"maleRatio\":20.1,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n\t\t\t\"percentOfPopulationWithDiagnosis\": 0,\n    \t\t\"percentOfProbabilityToAcquireDiagnosis\": 0,\n    \t\t\"numberOfEncounters\": 0,\n    \t\t\"exclusionRules\": \"gender == 'male' || (gender == 'female' && age <= 20)\",\n\t\t\t\"icd10Code\":\"ZSDS\"\n\t\t}\n\t]\n}"
+							"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War II\"\n\t},\n\t\"femaleRatio\":30,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n    \t\t\"numberOfEncounters\": 3,\n\t\t\t\"icd10Code\":\"ZSDS\",\n\t\t\t\"name\":\"Unknown disease\"\n\t\t}\n\t]\n}"
 						},
-						"url": "{{URL}}/datasetConfigurations",
-						"description": ""
+						"url": {
+							"raw": "{{URL}}/datasetConfigurations",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"datasetConfigurations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/datasetConfigurations - morbidity schema error",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"config-01\",\r\n  \"maleRatio\": 60,\r\n  \"morbiditiesData\": [\r\n    {\r\n      \"exclusionRules\": \"gender == 'Female' or (gender == 'Male' and total_age <= 20)\",\r\n      \"name\": \"Chronic ischemic heart disease\",\r\n      \"numberOfEncounters\": 2\r\n    },\r\n    {\r\n      \"exclusionRules\": \"gender == 'Male'\",\r\n      \"icd10Code\": \"F33\",\r\n      \"name\": \"Major depressive disorder, recurrent\",\r\n      \"percentOfPopulationWithDiagnosisRisk\": 90,\r\n      \"percentOfProbabilityToAcquireDiagnosis\": 90\r\n    },\r\n    {\r\n      \"icd10Code\": \"Z60.2\",\r\n      \"name\": \"Problems related to living alone\",\r\n      \"numberOfEncounters\": 10\r\n    }\r\n  ],\r\n  \"numberOfPatients\": 10,\r\n  \"outputFolder\": \"./output/generatedDatasets\",\r\n  \"warEra\": {\r\n    \"warEra\": \"World War II\",\r\n    \"warEraCode\": \"world_war_ii\",\r\n    \"warEraEndDate\": \"Tue, 31 Dec 1946 00:00:00 GMT\",\r\n    \"warEraStartDate\": \"Sun, 07 Dec 1941 00:00:00 GMT\"\r\n  },\r\n  \"year\": 1980\r\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/datasetConfigurations",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"datasetConfigurations"
+							]
+						}
 					},
 					"response": []
 				},
@@ -77,8 +116,7 @@
 									"equals": true
 								}
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -87,7 +125,10 @@
 					"request": {
 						"method": "PUT",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{URL}}/generateDatasets?title=config-01asdsd",
 							"host": [
@@ -103,8 +144,7 @@
 									"equals": true
 								}
 							]
-						},
-						"description": ""
+						}
 					},
 					"response": []
 				},
@@ -113,7 +153,10 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{URL}}/morbidities?warEra=World War III",
 							"host": [
@@ -129,8 +172,28 @@
 									"equals": true
 								}
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{URL}}/morbidities - no war era",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
 						},
-						"description": ""
+						"url": {
+							"raw": "{{URL}}/morbidities",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"morbidities"
+							]
+						}
 					},
 					"response": []
 				}
@@ -148,15 +211,48 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War II\"\n\t},\n\t\"femaleRatio\":30.1,\n\t\"maleRatio\":20.1,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n\t\t\t\"percentOfPopulationWithDiagnosis\": 0,\n    \t\t\"percentOfProbabilityToAcquireDiagnosis\": 0,\n    \t\t\"numberOfEncounters\": 0,\n    \t\t\"exclusionRules\": \"gender == 'male' || (gender == 'female' && age <= 20)\",\n\t\t\t\"icd10Code\":\"I25\"\n\t\t}\n\t]\n}"
+					"raw": "{\r\n  \"title\": \"config-01\",\r\n  \"maleRatio\": 60,\r\n  \"morbiditiesData\": [\r\n    {\r\n      \"exclusionRules\": \"gender == 'Female' or (gender == 'Male' and total_age <= 20)\",\r\n      \"icd10Code\": \"I25\",\r\n      \"numberOfEncounters\": 2\r\n    },\r\n    {\r\n      \"exclusionRules\": \"gender == 'Male'\",\r\n      \"icd10Code\": \"F33\",\r\n      \"percentOfPopulationWithDiagnosisRisk\": 90,\r\n      \"percentOfProbabilityToAcquireDiagnosis\": 90\r\n    },\r\n    {\r\n      \"icd10Code\": \"Z60.2\",\r\n      \"numberOfEncounters\": 10\r\n    }\r\n  ],\r\n  \"numberOfPatients\": 10,\r\n  \"outputFolder\": \"./output/generatedDatasets\",\r\n  \"warEra\": {\r\n    \"warEra\": \"World War II\",\r\n    \"warEraCode\": \"world_war_ii\",\r\n    \"warEraEndDate\": \"Tue, 31 Dec 1946 00:00:00 GMT\",\r\n    \"warEraStartDate\": \"Sun, 07 Dec 1941 00:00:00 GMT\"\r\n  },\r\n  \"year\": 1980\r\n}"
 				},
-				"url": "{{URL}}/datasetConfigurations",
-				"description": ""
+				"url": {
+					"raw": "{{URL}}/datasetConfigurations",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"datasetConfigurations"
+					]
+				}
 			},
 			"response": []
 		},
 		{
-			"name": "{{URL}}/datasetConfigurations",
+			"name": "{{URL}}/datasetConfigurations - using morbidity missing in war era",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"config-02\",\r\n  \"maleRatio\": 60,\r\n  \"morbiditiesData\": [\r\n    {\r\n      \"icd10Code\": \"L400\",\r\n      \"numberOfEncounters\": 2\r\n    }\r\n  ],\r\n  \"numberOfPatients\": 10,\r\n  \"outputFolder\": \"./output/generatedDatasets\",\r\n  \"warEra\": {\r\n    \"warEra\": \"World War II\",\r\n    \"warEraCode\": \"world_war_ii\",\r\n    \"warEraEndDate\": \"Tue, 31 Dec 1946 00:00:00 GMT\",\r\n    \"warEraStartDate\": \"Sun, 07 Dec 1941 00:00:00 GMT\"\r\n  },\r\n  \"year\": 1980\r\n}"
+				},
+				"url": {
+					"raw": "{{URL}}/datasetConfigurations",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"datasetConfigurations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/datasetConfigurations - by title",
 			"request": {
 				"method": "GET",
 				"header": [
@@ -184,8 +280,33 @@
 							"equals": true
 						}
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/datasetConfigurations - all",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War II\"\n\t},\n\t\"femaleRatio\":30.1,\n\t\"maleRatio\":20.1,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n\t\t\t\"percentOfPopulationWithDiagnosis\": 0,\n    \t\t\"percentOfProbabilityToAcquireDiagnosis\": 0,\n    \t\t\"numberOfEncounters\": 0,\n    \t\t\"exclusionRules\": \"gender == 'male' || (gender == 'female' && age <= 20)\",\n\t\t\t\"icd10Code\":\"I25\"\n\t\t}\n\t]\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "{{URL}}/datasetConfigurations",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"datasetConfigurations"
+					]
+				}
 			},
 			"response": []
 		},
@@ -205,13 +326,19 @@
 						{
 							"key": "datasetConfiguration",
 							"value": "",
-							"description": "",
 							"type": "file"
 						}
 					]
 				},
-				"url": "{{URL}}/datasetConfigurationFromFile",
-				"description": ""
+				"url": {
+					"raw": "{{URL}}/datasetConfigurationFromFile",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"datasetConfigurationFromFile"
+					]
+				}
 			},
 			"response": []
 		},
@@ -220,7 +347,10 @@
 			"request": {
 				"method": "PUT",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{URL}}/generateDatasets?title=config-01",
 					"host": [
@@ -236,8 +366,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -246,9 +375,19 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
-				"url": "{{URL}}/warEras",
-				"description": ""
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{URL}}/warEras",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"warEras"
+					]
+				}
 			},
 			"response": []
 		},
@@ -257,7 +396,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{URL}}/morbidities?warEra=World War II",
 					"host": [
@@ -273,8 +415,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		}
