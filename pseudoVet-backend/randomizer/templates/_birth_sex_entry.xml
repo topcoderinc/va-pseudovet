@@ -7,7 +7,7 @@
       </text>
       <statusCode code="completed"/>
       <effectiveTime value="{{ default_date | datetime_format('%Y%m%d') }}"/>
-      <value code="F" codeSystem="2.16.840.1.113883.5.1" xsi:type="CD" displayName="Female"/>
+      <value code="{{ gender_code }}" codeSystem="2.16.840.1.113883.5.1" xsi:type="CD" displayName="{{ gender }}"/>
     </observation>
 </entry>
 

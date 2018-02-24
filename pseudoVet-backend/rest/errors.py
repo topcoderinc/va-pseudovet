@@ -1,5 +1,5 @@
 """
-the common errors defined and error_handler
+The common errors defined and error_handler
 """
 
 from http import HTTPStatus
@@ -12,30 +12,30 @@ from .logger import logger
 
 class EntityNotFoundError(Exception):
     """
-    backend will raise this error if entity not found
+    The backend will raise this error if some entity is not found
     """
     pass
 
 
 class BadRequestError(Exception):
     """
-    backend will raise this error if request params error or invoke params error
+    The backend will raise this error if request or invoke parameters have an error
     """
     pass
 
 
 class InnerServerError(Exception):
     """
-    backend will raise this error if got some unexpected
+    The backend will raise this error if some other unexpected error occurred
     """
     pass
 
 
 def error_handler(err):
     """
-    handler errors and return message with http error code
+    Handle errors and return message with HTTP error code
     :param err: the error instance
-    :return: the json response and error code
+    :return: the JSON response with error message and error code
     """
 
     logger.error(type(err))

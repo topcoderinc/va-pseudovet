@@ -1,5 +1,5 @@
 """
-the decorators used for controllers and services
+The decorators used by controllers and services
 """
 
 import inspect
@@ -18,11 +18,14 @@ app = None
 # the cerberus validator instance
 cerberus_validator = Validator()
 
+# Bug fix: Cerberus doesn't want to validate morbiditiesData items
+custom_validators = []
+
 
 def inject_flask_app(flask_app):
     """
-    inject flask app and cache it for auto register route to flask app
-    :param flask_app:  the flask app instance
+    Inject Flask app and cache it for auto registering routes
+    :param flask_app: the Flask app instance
     :return: None
     """
     global app
@@ -31,9 +34,9 @@ def inject_flask_app(flask_app):
 
 def rest_mapping(path, methods=None):
     """
-    the rest mapping decorator, used for register path to flask app and wrapper result to json response
+    The REST mapping decorator, used for registering path to the Flask app and wrapping result into JSON response
     :param path: the route path
-    :param methods:  the request methods
+    :param methods: the request methods
     :return: the decorator
     """
 
@@ -41,11 +44,11 @@ def rest_mapping(path, methods=None):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
-            return result is None and '' or jsonify(result)  # warp json response
+            return result is None and '' or jsonify(result)  # wrap json response
 
         new_path = APPLICATION_ROOT + path  # add path prefix to path
-        logger.debug('endpoint added : ' + (methods and methods.__str__() or '[ALL]') + ' ' + new_path)
-        app.route(new_path, methods=methods)(wrapper)  # inject route to flask app
+        logger.debug('endpoint added: ' + (methods and methods.__str__() or '[ALL]') + ' ' + new_path)
+        app.route(new_path, methods=methods)(wrapper)  # inject route to Flask app
 
         return wrapper
 
@@ -54,11 +57,10 @@ def rest_mapping(path, methods=None):
 
 def service(schema=None):
     """
-    the rest service decorator, used for
-    1. params check
-    2. logging service enter and leave with params and result
+    The REST service decorator, used for parameter check and logging service method entrance/exit with
+    parameters and result
     :param schema: the validator schema
-    :return: the json response
+    :return: the decorator
     """
 
     def decorator(func):
@@ -66,10 +68,11 @@ def service(schema=None):
         def wrapper(*args, **kwargs):
             func_file_name = os.path.splitext(os.path.basename(inspect.getfile(func)))[0]
             func_name = func.__name__
-            logger.info('** Enter service ' + func_file_name + '.' + func_name
-                        + ', args= ' + str(args) + ', kwargs= ' + str(kwargs))
+            logger.info('** Enter service ' + func_file_name + '.' + func_name +
+                        ', args = ' + str(args) + ', kwargs = ' + str(kwargs))
 
-            if schema is not None:  # check schema
+            if schema is not None:
+                # check schema
                 document = {}
                 args_len = len(args)
                 args_spec = inspect.getfullargspec(func)
@@ -80,7 +83,11 @@ def service(schema=None):
                         document[document_key] = args[i]
 
                 if not cerberus_validator.validate(document, schema):  # validator schema
-                    raise BadRequestError(cerberus_validator.errors)
+                    raise BadRequestError("Request validation failed. Info: " + cerberus_validator.errors)
+
+                # Bug fix: Cerberus doesn't want to validate morbiditiesData items
+                for custom_validator in custom_validators:
+                    custom_validator(document)
 
             service_result = func(*args, **kwargs)
             logger.info('** Leave service ' + func_file_name + '.' + func_name + ', result= ' + str(service_result))

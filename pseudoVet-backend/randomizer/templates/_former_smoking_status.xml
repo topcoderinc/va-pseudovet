@@ -22,7 +22,7 @@
 				</tr>
 				<tr>
 					<td ID="BirthSexInfo">Birth Sex</td>
-					<td>Female</td>
+					<td>{{ gender }}</td>
 					<td>{{ default_date | datetime_format('%B %d, %Y') }}</td>
 				</tr>
 			</tbody>

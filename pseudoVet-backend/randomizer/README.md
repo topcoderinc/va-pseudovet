@@ -1,22 +1,22 @@
 # PseudoVet Randomizer and Aging
 
 ## Description
-This utility script creates C-CDA compliant documents of any number of fictional patients, using random data. It has the following features:
-1. Builds as many C-CDA documents as requested by command line option.
-2. Ages the patient record +5, +10 and +15 years automatically.
-3. Calculates death based on [life expectancy](https://en.wikipedia.org/wiki/List_of_sovereign_states_by_life_expectancy) and modifies C-CDA documents accordingly. 
-4. Allows the base year to be defined as an input option, so that the patients age and profile fits to a time period. 
-5. Randomly assigns a war era to a patient based on its birth date and a random age when enlisting for war.  
+This CLI utility creates C-CDA compliant documents of any number of fictional patients, using random data. It has the following features:
+1. Builds C-CDA documents for the specified number of veterans of the specified war.
+2. Calculates death based on [life expectancy](https://en.wikipedia.org/wiki/List_of_sovereign_states_by_life_expectancy) and modifies C-CDA documents accordingly.
+3. Distributes gender and morbidities across patients according to the provided probabilities and exclusion rules.
+4. Ages the patient records until death or specified report end year.
 
 ## Extensibility
 This library uses the very powerful [Jinja2](http://jinja.pocoo.org/docs/2.10) templating engine which allows great flexibility and readability of the XML template files. Jinja2 is the most widely used templating engine by all Python developers.
 
-I created jinja2 temlplate files for the **Continuity of Care Document (CCD)** and it would be easy to add new templates using the same library.
+Jinja2 template files were created for the **Continuity of Care Document (CCD)** and it would be easy to add new templates using the same library.
 
 The templates are populated from variables read from a data source file (see `datasources/datasource.json`) which allows even more extensibility. New variables can be added to the data source and they will be readily usable in the templates.
 
 ## Demonstration video
-See a demo video here https://youtu.be/8drwJ9o3OEE
+Demo video of the recent version: https://youtu.be/EspoccXdhzk
+Original demo video is here: https://youtu.be/8drwJ9o3OEE
 
 ## Prerequisites
 1. Python 3.6.0
@@ -39,7 +39,7 @@ source ~/virtualenvs/pseudo-vets/bin/activate
 
 Now install the script dependencies:
 ```bash
-# this takes a couple of minutes
+# this can take a couple of minutes
 pip3 install -r requirements.txt 
 ```
 
@@ -52,32 +52,45 @@ That will produce this help screen:
 PseudoVet Randomizer and Aging.
 
 Description:
-Creates C-CDA conformant documents of fictional patients from random data and ages those records +5, +10 and +15 years
+Creates C-CDA conformant documents of fictional patients using random data and
+optional dataset configuration parameters.
 
 Usage:
-  pseudo-vets.py [-n number] [-o output] [-y year]
+  pseudo-vets.py [-c path] [-t title] [-w code] [-n number] [-o output] [-y year]
 
 Options:
+    -c path         Path to the dataset configuration file.
+    -t title        Title of dataset configuration to be used.
+      At maximum one of -c and -t switches is expected to be specified.
+    -w code         Code of war era for which records are created.
+      E.g. world_war_ii, vietnam_war, korean_conflict or gulf_war.
+      Can override value specified in dataset configuration file.
+      Default is world_war_ii.
     -n number       Integer number of records to create. Defaults to 1.
-    -o Output       Path to the folder where the output files shall be saved to. Will be created if non existent. Defaults to ./output
-    -y year         Base year in YYYY format to use as base for randomizing patient birth date (and thus death date). Defaults to 90 years before current year 
+      Can override value specified in dataset configuration.
+    -o Output       Path to the folder where the output files shall be saved to. Will be created if non existent.
+      Defaults to ./output/generatedDatasets
+      Can override value specified in dataset configuration.
+    -y year         End year for the reports to be generated.
+      Defaults to the current year
+      Can override value specified in dataset configuration.
 
     -h --help       Show this screen.
     -v --version    Show version.
 ```
 
 ## Production Build and Installation
-To move to a production server, just unzip the file to a folder in the target server and make sure the script runs under a user with permissions to create the work folder (by default `./output`) and write to it.
+To move to a production server, just unzip the files to a folder in the target server and make sure the script runs under a user with permissions to create the work folder (by default `./output`) and write to it.
 
 ## Verification guide
-Run the script with default options like this:
+Run the script with the default options like this:
 ```bash
 python3 pseudo-vets.py 
 ```
 You should see logs like these:
  <img src="docs/sample_logs.png" />
 
-The script creates a work folder `./output` and each time it runs, creates a subfolder to hold the results, for example: a folder `./output/2018-01-11T163449.235942` will hold the patient files of the work session `2018-01-11T163449.235942`
+The script creates an output folder (default is ``./output/generatedDatasets` and each time it runs, it creates a subfolder to hold the results, for example: a folder `./output/generatedDatasets/2018-01-11T163449.235942` will hold the patient files of the work session `2018-01-11T163449.235942`
 
 
 ### Document scoring
@@ -89,15 +102,12 @@ Useful for verification is also this online [C-CDA Viewer](http://brynlewis.org/
 
 
 ## File names
-The general format of the file name is `{session_id}-{patient_number}_{age}.xml`. For each patient there will be four files: one for the base record and one for each +5, +10 and +15 aged record. File names for patient_number 1 would be like these:
+The general format of the file name is `{session_id}-{patient_number}_{age}.xml`. For each patient there will be variable number of files. This number depends on the random interval between reports, end report date, patient's birth and death dates. File names for patient_number 1 would be like these:
 
-- `2018-01-11T163449.235942-1.xml` the base file
-- `2018-01-11T163449.235942-1_5.xml` the +5 years aged record file
-- `2018-01-11T163449.235942-1_10.xml` the +10 years aged record file
-- `2018-01-11T163449.235942-1_15.xml` the +15 years aged record file
-
-## Notes
-Note that if a patient *'dies'* when aging the record at +5 years, the +10 and +15 aged records will be the same as when the patient *'died'*
+- `2018-01-11T163449.235942-1_42.xml` - report at age 42
+- `2018-01-11T163449.235942-1_45.xml` - report at age 45
+- `2018-01-11T163449.235942-1_52.xml` - report at age 52
+- `2018-01-11T163449.235942-1_59.xml` - report at age 59
 
 ## Docs
 The C-CDA Implementation Guide is included for convenience in `docs/C-CDAImplementationGuide.pdf`

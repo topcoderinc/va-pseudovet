@@ -80,7 +80,7 @@
 				<!-- Date of birth need only be precise to the day -->
 				<birthTime value="{{ date_of_birth | datetime_format('%Y%m%d') }}"/>
 				<maritalStatusCode code="M" displayName="Married" codeSystem="2.16.840.1.113883.5.2" codeSystemName="MaritalStatusCode"/>
-				<religiousAffiliationCode code="1013" displayName="Christian (non-Catholic, non-specific)" codeSystem="2.16.840.1.113883.5.1076" codeSystemName="HL7 Religious Affiliation"/>
+				<religiousAffiliationCode code="{{ religion_code }}" displayName="{{ religion }}" codeSystem="2.16.840.1.113883.5.1076" codeSystemName="HL7 Religious Affiliation"/>
 				<!-- CDC Race and Ethnicity code set contains the five minimum race and ethnicity 
 					categories defined by OMB Standards -->
 				<raceCode code="{{ race_code }}" displayName="{{ race }}" codeSystem="2.16.840.1.113883.6.238" codeSystemName="Race &amp; Ethnicity - CDC"/>
@@ -1126,23 +1126,23 @@
 								</tr>
 								<tr>
 									<th align="left">Blood Pressure</th>
-									<td ID="vit3">145/88 mm[Hg]</td>
+									<td ID="vit3">{{ vital_signs_blood_pressure }} mm[Hg]</td>
 								</tr>
 								<tr>
 									<th align="left">Heart Rate</th>
-									<td ID="vit4">80 beats per minute</td>
+									<td ID="vit4">{{ vital_signs_heart_rate }} beats per minute</td>
 								</tr>
 								<tr>
 									<th align="left">O2 Percentage BldC Oximetry</th>
-									<td ID="vit5">95 percent</td>
+									<td ID="vit5">{{ vital_signs_percentage_oximetry }} percent</td>
 								</tr>
 								<tr>
 									<th align="left">Body Temperature</th>
-									<td ID="vit6">38 degree celsius</td>
+									<td ID="vit6">{{ vital_signs_body_temperature }} degree celsius</td>
 								</tr>
 								<tr>
 									<th align="left">Respiratory Rate</th>
-									<td ID="vit7">18 breaths per minute</td>
+									<td ID="vit7">{{ vital_signs_respiratory_rate }} breaths per minute</td>
 								</tr>
 							</tbody>
 						</table>
