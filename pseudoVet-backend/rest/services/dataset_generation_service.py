@@ -2,10 +2,18 @@
 The dataset service.
 It provides a method for generating records according to the specified dataset configuration.
 """
+
+from os.path import isdir, join, exists
+from os import listdir, stat
+from shutil import rmtree
+from datetime import datetime
+
 from randomizer.pseudo_vets import generate_from_config
 from rest.decorators import service
 from rest.services import dataset_configuration_service
 from rest.errors import EntityNotFoundError
+from config import DATASET_PREFIX, GENERATED_DATASETS_DIR
+from rest.logger import logger
 
 
 @service(schema={'title': {'type': 'string', 'required': True}})
@@ -20,3 +28,45 @@ def generate(title):
     if len(configurations) <= 0:
         raise EntityNotFoundError('Cannot find configuration with title ' + title)
     return generate_from_config(configurations[0])
+
+
+@service(schema={'title': {'type': 'string', 'required': True}})
+def delete_dataset_by_title(title):
+    """
+    Delete dateset by title
+    It raises EntityNotFoundError if dataset not found
+    :param title: the dataset title
+    """
+
+    dataset_path = join(GENERATED_DATASETS_DIR, '{0}.{1}'.format(DATASET_PREFIX, title))
+    if not exists(dataset_path):
+        raise EntityNotFoundError("Dataset not found where title = " + title)
+    rmtree(dataset_path)
+
+
+@service()
+def get_all_datasets():
+    """
+    Get all dataset by scan output folder, if folder name start begin DATASET_PREFIX, that's mean this dataset generate
+    by rest api, it should be returned.
+    If get configuration by title failed, then this api will skip the dataset
+    :return: the rest api generated datasets
+    """
+    datasets_folders = [f for f in listdir(GENERATED_DATASETS_DIR) if isdir(join(GENERATED_DATASETS_DIR, f))]
+    datasets = []
+    for dataset_name in datasets_folders:
+        if not dataset_name.startswith(DATASET_PREFIX):  # not generate by rest api
+            continue
+        name = dataset_name[len(DATASET_PREFIX) + 1: len(dataset_name)]
+        try:
+            configurations = dataset_configuration_service.get_configuration_by_title(name)
+            datasets.append({
+                'title': name,
+                'completedOn': datetime.fromtimestamp(
+                    stat(join(GENERATED_DATASETS_DIR, dataset_name)).st_mtime).isoformat(),
+                'configuration': configurations
+            })
+        except Exception as e:
+            # if get configuration error, then skip this dataset, so we don't need raise error here
+            logger.error(e)
+    return datasets

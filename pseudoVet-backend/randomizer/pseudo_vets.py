@@ -5,6 +5,8 @@ import os
 import types
 from collections import OrderedDict
 from datetime import timedelta
+
+import shutil
 from dateutil.relativedelta import relativedelta
 from random import randint
 from random import shuffle
@@ -18,7 +20,7 @@ from config import DATASOURCES_DIR, GENERATED_DATASETS_DIR, ICD_10_CODES_FILE_PA
     MAX_PATIENT_AGE_ON_WAR_START, MIN_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START, \
     MAX_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START, MIN_DAYS_BETWEEN_FIRST_REPORT_AND_MAX_DATE, DEATH_AGE_MEAN, \
     DEATH_AGE_DEVIATION, MIN_DAYS_BETWEEN_REPORTS, MAX_DAYS_BETWEEN_REPORTS, MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE, \
-    MIN_DAYS_TILL_MORBIDITY_RESOLUTION, MAX_DAYS_TILL_MORBIDITY_RESOLUTION
+    MIN_DAYS_TILL_MORBIDITY_RESOLUTION, MAX_DAYS_TILL_MORBIDITY_RESOLUTION, DATASET_PREFIX
 from rest.services.datasources_service import get_wars_from_file, get_morbidities_from_war_code
 
 # Global variables
@@ -36,18 +38,20 @@ renderer = Renderer()
 DAYS_IN_YEAR = 365.2425
 
 
-def setup_work_session(output_dir, create_session_path=True):
+def setup_work_session(output_dir, create_session_path=True, config_title=None):
     """
     Create a unique work folder for the current session
     :param output_dir: the output directory for generated dataset files
     :param create_session_path: True if session directory should be created, False otherwise
+    :param config_title: the config title used
     :return: None
     """
     global work_dir
     global session_id
 
     # generate new session ID from the current timestamp
-    session_id = datetime.datetime.now().isoformat().replace(':', '')
+    session_id = config_title and '{0}.{1}'.format(DATASET_PREFIX,
+                                                   config_title) or datetime.datetime.now().isoformat().replace(':', '')
     work_dir = output_dir
 
     # load data sources if they haven't been loaded previously
@@ -65,6 +69,9 @@ def setup_work_session(output_dir, create_session_path=True):
             session_path = os.path.relpath(session_path)
         except ValueError:
             pass
+
+        if os.path.exists(session_path):
+            shutil.rmtree(session_path)
         os.mkdir(session_path)
         logger.info("Using output folder " + session_path)
 
@@ -436,7 +443,7 @@ def apply_morbidity(patients, morbidity_data):
         # generate random date when this diagnosis appeared
         # multiplication by sqrt(random()) is used for increasing the number of diagnoses in early ages
         diagnosis_date = date_of_birth + timedelta(days=randint(0, MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE) *
-                                                   (random() ** 0.5))
+                                                        (random() ** 0.5))
         resolved_on = diagnosis_date + timedelta(days=randint(MIN_DAYS_TILL_MORBIDITY_RESOLUTION,
                                                               MAX_DAYS_TILL_MORBIDITY_RESOLUTION))
         patient['expected_problems'].append({
@@ -572,7 +579,7 @@ def generate_from_config(dataset_config):
     cur_work_dir = GENERATED_DATASETS_DIR
     if 'outputFolder' in dataset_config:
         cur_work_dir = dataset_config['outputFolder']
-    setup_work_session(cur_work_dir)
+    setup_work_session(cur_work_dir, True, dataset_config['title'])
 
     # retrieve morbidities from configuration or data source
     morbidities_data = None

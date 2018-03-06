@@ -1,8 +1,8 @@
-# PseudoVet - Improve Accuracy For Aging Algorithm and API Challenge
+# PseudoVet - VA Pseudovet Angular Frontend Python Backend Integration Challenge
 
 
 
-## Local deploy
+## Backend local deploy
 
 - Install python3, pip3, virtualenv
   - For Ubuntu, you need to run `sudo apt install python3 python3-pip virtualenv`
@@ -14,6 +14,16 @@
 
 
 
+
+## Frontend local deploy
+
+- install node v8.x ,npm 5.x
+- build frontend
+  - `cd ./frontend`
+  - install dependencies, `npm i`
+  - update backend url config baseUri in *frontend/src/environments/environment.prod.js* if you need
+  - then run build `npm run build`
+
 ## Run
 
 - For the CLI program (the old randomizer that now supports dataset configuration files), you can use `python pseudo_vets_cli.py`, for more details see *randomizer/README.md*
@@ -23,32 +33,34 @@
 
 These are some configuration values that can be found in config.py
 
-| configuration parameter name               | description                                             | environment key | default value                                          |
-| ------------------------------------------ | ------------------------------------------------------- | --------------- | ------------------------------------------------------ |
-| APPLICATION_ROOT                           | the rest backend endpoint route prefix                  |                 | /api/v1                                                |
-| LOG_LEVEL                                  | the backend log level                                   |                 | DEBUG                                                  |
-| LOG_FORMAT                                 | the app log message format                              |                 | %(asctime)s %(levelname)s : %(message)s                |
-| FLASK_RUN_MODE                             | the Flask run mode, DEBUG or PROD                       | MODE            | PROD                                                   |
-| WEB_PORT                                   | the Flask run web port                                  | PORT            | 5000                                                   |
-| TEMPLATES_DIR                              | the Jinja2 templates directory                          |                 | ./randomizer/templates                                 |
-| DATASOURCES_DIR                            | the path of datasource directory                        |                 | ./randomizer/datasources                               |
-| ICD_10_CODES_FILE_PATH                     | the file with ICD-10 codes and names                    |                 | ./randomizer/datasources/ICD-10/icd10cm_codes_2018.txt |
-| DATASET_CONFIGURATIONS_DIR                 | the path of dataset config files dir                    |                 | ./output/datasetConfigurations                         |
-| GENERATED_DATASETS_DIR                     | the generated datasets file dir path                    |                 | ./output/generatedDatasets                             |
-| CONFIGURATION_PREFIX                       | the datasource config file name prefix                  |                 | DatasetConfiguration                                   |
-| DEFAULT_WAR_ERA_CODE                       | the code of war era to be used by default               |                 | world_war_ii                                           |
-| MIN_PATIENT_AGE_ON_WAR_START               | the minimum age of generated patients on war start      |                 | 18                                                     |
-| MAX_PATIENT_AGE_ON_WAR_START               | the maximum age of generated patients on war start      |                 | 40                                                     |
-| DEATH_AGE_MEAN                             | the average death age of the generated patients         |                 | 79                                                     |
-| DEATH_AGE_DEVIATION                        | the deviation of death age of the generated patients    |                 | 15                                                     |
-| MIN_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the min days from war start till 1st patient's report   |                 | 100                                                    |
-| MAX_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the max days from war start till 1st patient's report   |                 | 20 * 365                                               |
-| MIN_DAYS_BETWEEN_FIRST_REPORT_AND_MAX_DATE | the min days between first report and death/end date    |                 | 5 * 365                                                |
-| MIN_DAYS_BETWEEN_REPORTS                   | the min days between reports for the same patient       |                 | 3 * 365                                                |
-| MAX_DAYS_BETWEEN_REPORTS                   | the max days between reports for the same patient       |                 | 10 * 365                                               |
-| MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE  | the max days between patient's birth and diagnosis date |                 | 80 * 365                                               |
-| MIN_DAYS_TILL_MORBIDITY_RESOLUTION         | the min days between morbidity diagnosis and resolution |                 | 30                                                     |
-| MAX_DAYS_TILL_MORBIDITY_RESOLUTION         | the max days between morbidity diagnosis and resolution |                 | 100                                                    |
+| configuration parameter name             | description                              | environment key | default value                            |
+| ---------------------------------------- | ---------------------------------------- | --------------- | ---------------------------------------- |
+| APPLICATION_ROOT                         | the rest backend endpoint route prefix   |                 | /api/v1                                  |
+| LOG_LEVEL                                | the backend log level                    |                 | DEBUG                                    |
+| LOG_FORMAT                               | the app log message format               |                 | %(asctime)s %(levelname)s : %(message)s  |
+| FLASK_RUN_MODE                           | the Flask run mode, DEBUG or PROD        | MODE            | PROD                                     |
+| WEB_PORT                                 | the Flask run web port                   | PORT            | 5000                                     |
+| TEMPLATES_DIR                            | the Jinja2 templates directory           |                 | ./randomizer/templates                   |
+| DATASOURCES_DIR                          | the path of datasource directory         |                 | ./randomizer/datasources                 |
+| ICD_10_CODES_FILE_PATH                   | the file with ICD-10 codes and names     |                 | ./randomizer/datasources/ICD-10/icd10cm_codes_2018.txt |
+| DATASET_CONFIGURATIONS_DIR               | the path of dataset config files dir     |                 | ./output/datasetConfigurations           |
+| GENERATED_DATASETS_DIR                   | the generated datasets file dir path     |                 | ./output/generatedDatasets               |
+| CONFIGURATION_PREFIX                     | the datasource config file name prefix   |                 | DatasetConfiguration                     |
+| DEFAULT_WAR_ERA_CODE                     | the code of war era to be used by default |                 | world_war_ii                             |
+| MIN_PATIENT_AGE_ON_WAR_START             | the minimum age of generated patients on war start |                 | 18                                       |
+| MAX_PATIENT_AGE_ON_WAR_START             | the maximum age of generated patients on war start |                 | 40                                       |
+| DEATH_AGE_MEAN                           | the average death age of the generated patients |                 | 79                                       |
+| DEATH_AGE_DEVIATION                      | the deviation of death age of the generated patients |                 | 15                                       |
+| MIN_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the min days from war start till 1st patient's report |                 | 100                                      |
+| MAX_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the max days from war start till 1st patient's report |                 | 20 * 365                                 |
+| MIN_DAYS_BETWEEN_FIRST_REPORT_AND_MAX_DATE | the min days between first report and death/end date |                 | 5 * 365                                  |
+| MIN_DAYS_BETWEEN_REPORTS                 | the min days between reports for the same patient |                 | 3 * 365                                  |
+| MAX_DAYS_BETWEEN_REPORTS                 | the max days between reports for the same patient |                 | 10 * 365                                 |
+| MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE | the max days between patient's birth and diagnosis date |                 | 80 * 365                                 |
+| MIN_DAYS_TILL_MORBIDITY_RESOLUTION       | the min days between morbidity diagnosis and resolution |                 | 30                                       |
+| MAX_DAYS_TILL_MORBIDITY_RESOLUTION       | the max days between morbidity diagnosis and resolution |                 | 100                                      |
+| DATASET_PREFIX                           | the dataset folder prefix                |                 |                                          |
+| FRONTEND_DIR                             | the frontend dist directory              |                 | ./frontend/dist                          |
 
 ## Dataset configuration files
 
@@ -123,11 +135,29 @@ The recent version of tha applications support generation of reports based on JS
 
 ## Verification Steps
 
+### Backend
+
 - Download postman (https://www.getpostman.com/) and run it
 - Import *docs/pseudoVet-backend.postman_collection.json* and *docs/pseudoVet-env.postman_environment.json* and then run these endpoint.
 
 
+###Frontend
+
+- run `python3 pseudo_vets_server.py ` start server, then use browser open http://127.0.0.1:5000
+
+
+
+## Notes
+
+- add endpoint GET /datasets to fetch all datasets
+- add endpoint DELETE /datasets  to delete dateset by title
+- update generated datasets output folder session_id from timestamp to DATASET_PREFIX.configuration-title
+- swagger and postman example updated
+- for frontend, add package ngx-toastr to toastr messages, and add @ngx-progressbar/core,@ngx-progressbar/http to progress bar on page top when http requesting.
+
 ## Video
+
+this Integration Challenge video: <https://youtu.be/f0XJglZKOUE>
 
 Demo of deployment, usage and testing of the recent version: <https://youtu.be/EspoccXdhzk>
 
