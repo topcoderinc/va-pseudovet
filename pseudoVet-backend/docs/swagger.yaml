@@ -105,6 +105,59 @@ paths:
           description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
           schema:
             $ref: '#/definitions/Error'
+  /datasets:
+    get:
+      tags:
+        - Dataset
+      summary: get all datasets
+      description: get all datasets
+      responses:
+        200:
+          description: The operation succeeded.
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                description: the dataset title
+              completedOn:
+                type: string
+                description: the dataset completed time
+              configuration:
+                $ref: '#/definitions/DatasetConfiguration'
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete dataset by title
+      description: delete dataset by title
+      tags:
+        - Dataset
+      parameters:
+        - name: title
+          in: query
+          description: The title of the dataset
+          required: true
+          type: string
+      responses:
+        200:
+          description: The operation succeeded.
+          schema:
+            $ref: '#/definitions/Message'
+        400:
+          description: BAD REQUEST - if there was problem with the request (e.g. malformed or some parameters are missing)
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: INTERNAL SERVER ERROR - if the request was properly formatted, but the operation failed on the server side
+          schema:
+            $ref: '#/definitions/Error'
+
 
   /generateDatasets:
     put:
@@ -259,8 +312,6 @@ definitions:
         type: string
         description: The morbidity exclusion rules. Should be in Python notation for expressions/logical operators.
         example: gender == 'Male' or (gender == 'Female' and total_age <= 20)
-
-
   Error:
     properties:
       message:

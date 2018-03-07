@@ -5,9 +5,10 @@ It starts Flask server and then listens to REST requests at port specified in ps
 import os
 from http import HTTPStatus
 
-from flask import Flask
+from flask import Flask, send_from_directory, send_file
+from flask_cors import CORS
 
-from config import FLASK_RUN_MODE, WEB_PORT, DATASET_CONFIGURATIONS_DIR, GENERATED_DATASETS_DIR
+from config import FLASK_RUN_MODE, WEB_PORT, DATASET_CONFIGURATIONS_DIR, GENERATED_DATASETS_DIR, FRONTEND_DIR
 from rest.controllers import init
 from rest.errors import error_handler
 from rest.logger import logger
@@ -15,6 +16,7 @@ from randomizer.pseudo_vets import setup_work_session
 
 # create new Flask app
 app = Flask(__name__)
+CORS(app)
 
 
 @app.errorhandler(HTTPStatus.METHOD_NOT_ALLOWED)
@@ -28,6 +30,28 @@ def app_error_handler(err):
     :return: the JSON response with error message
     """
     return error_handler(err)
+
+
+@app.route('/')
+def frontend_app_index():
+    """
+    Frontend index route
+    :return: the index file content
+    """
+    return send_file(os.path.join(FRONTEND_DIR, 'index.html'))
+
+
+@app.route('/<path:filename>')
+def frontend_app_folder(filename):
+    """
+    Serve frontend folder resource and inject frontend url state
+    :param filename:
+    :return: the resource content
+    """
+    if not os.path.exists(os.path.join(FRONTEND_DIR, filename)):
+        return frontend_app_index()
+
+    return send_from_directory(FRONTEND_DIR, filename)
 
 
 if __name__ == '__main__':

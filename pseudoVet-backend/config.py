@@ -24,6 +24,9 @@ TEMPLATES_DIR = PROJECT_DIR + '/randomizer/templates'
 # the datasources directory
 DATASOURCES_DIR = PROJECT_DIR + '/randomizer/datasources'
 
+# the frontend directory
+FRONTEND_DIR = PROJECT_DIR + '/frontend/dist'
+
 # the path of the file with ICD-10 morbidity codes and names
 ICD_10_CODES_FILE_PATH = DATASOURCES_DIR + '/ICD-10/icd10cm_codes_2018.txt'
 
@@ -35,6 +38,9 @@ GENERATED_DATASETS_DIR = PROJECT_DIR + '/output/generatedDatasets'
 
 # the dataset configuration file prefix
 CONFIGURATION_PREFIX = 'DatasetConfiguration'
+
+# the datasets directory prefix
+DATASET_PREFIX = 'Dataset'
 
 # the code of the default war era
 DEFAULT_WAR_ERA_CODE = 'world_war_ii'
