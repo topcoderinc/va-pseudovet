@@ -9,3 +9,4 @@ MarkupSafe==1.0
 monotonic==1.4
 python-dateutil==2.6.1
 six==1.11.0
+flask-cors==3.0.3

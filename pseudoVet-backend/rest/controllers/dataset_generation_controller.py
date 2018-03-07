@@ -19,3 +19,22 @@ def generate():
     files_num = dataset_generation_service.generate(request.args.get('title'))
     message = "Dataset containing {0} files was generated successfully".format(files_num)
     return {'message': message}
+
+
+@rest_mapping('/datasets', ['GET'])
+def get_all_datasets():
+    """
+    get all datasets
+    :return: the datasets with config objects
+    """
+    return dataset_generation_service.get_all_datasets()
+
+
+@rest_mapping('/datasets', ['DELETE'])
+def delete_dataset():
+    """
+    delete dataset by title
+    :return: the message with the delete result
+    """
+    dataset_generation_service.delete_dataset_by_title(request.args.get('title'))
+    return {'message': 'succeed'}
