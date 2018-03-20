@@ -78,10 +78,10 @@
 
   <button *ngIf="create"
           [disabled]="step1Validation() || step2Validation() || step3Validation()"
-          class="success-button export-button" (click)="exportModal = true">Export
+          class="success-button export-button" (click)="onExportClick()">Export
   </button>
   <div *ngIf="!dashboard" class="preview-header">
-    <h2>{{editConfigObj.title + '.json'}}</h2>
+    <h2>{{editConfigObj.name}}</h2>
     <small>Loaded configuration file name</small>
   </div>
 
@@ -116,19 +116,16 @@
         <div class="clearfix">
           <div class="sec-1">
             <label class="label-element">No. of Patients</label>
-            <input appNumber [value]="configurationData.patients"
-                   (input)="configurationData.patients = $event.target.value"
-                   type="text" class="form-element no-of-patients"/>
+            <input appNumber [(ngModel)]= "configurationData.patients"
+                   type="text" minVal="1" class="form-element no-of-patients"/>
           </div>
           <div class="sec-2">
             <label class="label-element">Patient gender Ratio (m / f)</label>
-            <input appNumber [value]="configurationData.male"
-                   (input)="configurationData.male = $event.target.value"
-                   (change)="onRadioChange($event.target.value, 'male')"
+            <input appNumber roundOff="false" [ngModel]= "configurationData.male"
+                   (ngModelChange)="onRadioChange($event, 'male')"
                    type="text" class="form-element ratio"/>
-            <input appNumber [value]="configurationData.female"
-                   (input)="configurationData.female = $event.target.value"
-                   (change)="onRadioChange($event.target.value, 'female')"
+            <input appNumber roundOff="false" [ngModel]= "configurationData.female"
+                   (ngModelChange)="onRadioChange($event, 'female')"
                    type="text" class="form-element ratio"/>
           </div>
         </div>
@@ -155,31 +152,28 @@
             <label class="label-element">Start Date</label>
             <input appNumber [value]="configurationData.warStart.d"
                    (input)="configurationData.warStart.d = $event.target.value"
-                   type="text" class="form-element date" maxlength="2" disabled/>
+                   type="text" class="form-element date" maxlength="2" readonly/>
             <span>/</span>
             <input appNumber [value]="configurationData.warStart.m"
                    (input)="configurationData.warStart.m = $event.target.value"
-                   type="text" class="form-element date" maxlength="2" disabled/>
+                   type="text" class="form-element date" maxlength="2" readonly/>
             <span>/</span>
             <input [value]="configurationData.warStart.y"
                    (input)="configurationData.warStart.y = $event.target.value"
-                   type="text" class="form-element year" maxlength="4" disabled/>
+                   type="text" class="form-element year" maxlength="4" readonly/>
           </div>
 
           <!-- war end year -->
           <div class="sec-4">
             <label class="label-element">End Date</label>
-            <input appNumber [value]="configurationData.warEnd.d"
-                   (input)="configurationData.warEnd.d = $event.target.value"
-                   type="text" class="form-element date" maxlength="2"/>
+            <input appNumber [ngModel]="31"
+                   type="text" class="form-element date" minVal="31" maxVal="31" maxlength="2" readonly/>
             <span>/</span>
-            <input appNumber [value]="configurationData.warEnd.m"
-                   (input)="configurationData.warEnd.m = $event.target.value"
-                   type="text" class="form-element date" maxlength="2"/>
+            <input appNumber [ngModel]="12"
+                   type="text" class="form-element date" minVal="12" maxVal="12" maxlength="2" readonly/>
             <span>/</span>
-            <input [value]="configurationData.warEnd.y"
-                   (input)="configurationData.warEnd.y = $event.target.value"
-                   type="text" class="form-element year" maxlength="4"/>
+            <input appNumber [(ngModel)]="configurationData.year"
+                   type="text" class="form-element year" mustFormat="false" maxlength="4" />
           </div>
         </div>
         <div class="clearfix">
@@ -224,25 +218,22 @@
             </td>
             <td>{{item.icd10Code + '-' + item.name}}</td>
             <td>
-              <input appPercentage [value]="item.diagnosis"
-                     (input)="item.diagnosis = $event.target.value"
+              <input appPercentage [(ngModel)]="item.diagnosis"
                      type="text" class="form-element percentage" maxlength="4"/>
             </td>
             <td>
-              <input appPercentage [value]="item.acquires"
-                     (input)="item.acquires = $event.target.value"
+              <input appPercentage [(ngModel)]="item.acquires"
                      type="text" class="form-element percentage" maxlength="4"/>
             </td>
             <td>
-              <input appNumber [value]="item.profiles"
-                     (input)="item.profiles = $event.target.value"
+              <input appNumber [(ngModel)]="item.profiles"
                      type="text" class="form-element percentage"/>
             </td>
             <td>
               <button (click)="editGender(item, 'configurations')" class="small-button large">Edit
                 Exclusion
               </button>
-              {{item.gender  + (item.age.length !== 0 ? (',' + item.age ) : '') }}
+              {{item.gender  + (item.age && item.age.length !== 0 &&  item.age > 0 ? (',' + item.age ) : '') }}
             </td>
           </tr>
           <tr *ngIf="configurationData.configurations && configurationData.configurations.length === 0">
@@ -257,7 +248,7 @@
 
         <div class="clearfix">
           <button [disabled]="step2Validation()" class="blue-button light-blue"
-                  (click)="selectedTab = selectedTab + 1;">Next
+                  (click)="onStep2NextClick()">Next
           </button>
         </div>
 
@@ -274,7 +265,7 @@
         <label class="label-element">Add Diagnosis</label>
         <app-multi-select
           [selectedOptions]="configurationData.selectedConditions"
-          (add)="onAddCondition($event)" [options]="configurationData.availableList"></app-multi-select>
+          (add)="onAddCondition($event)" [options]="morbidities"></app-multi-select>
 
         <h5 class="padding">Selected Diagnosis</h5>
         <table class="preview-table preview-edit-table">
@@ -291,27 +282,24 @@
               <a (click)="deleteItems(item.name, 'conditions')" class="remove-icon"></a>
               {{$i + 1}}
             </td>
-            <td>{{item.name}}</td>
+            <td>{{item.icd10Code + '-' + item.name}}</td>
             <td>
-              <input appPercentage [value]="item.diagnosis"
-                     (input)="item.diagnosis = $event.target.value"
+              <input appPercentage [(ngModel)]="item.diagnosis"
                      type="text" class="form-element percentage" maxlength="4"/>
             </td>
             <td>
-              <input appPercentage [value]="item.acquires"
-                     (input)="item.acquires = $event.target.value"
+              <input appPercentage [(ngModel)]="item.acquires"
                      type="text" class="form-element percentage" maxlength="4"/>
             </td>
             <td>
-              <input appNumber [value]="item.profiles"
-                     (input)="item.profiles = $event.target.value"
+              <input appNumber [(ngModel)]="item.profiles"
                      type="text" class="form-element percentage"/>
             </td>
             <td>
               <button (click)="editGender(item, 'conditions')" class="small-button large">Edit
                 Exclusion
               </button>
-              {{item.gender}}
+              {{item.gender  + (item.age && item.age.length !== 0 &&  item.age > 0 ? (',' + item.age ) : '') }}
             </td>
           </tr>
           <tr *ngIf="configurationData.conditions && configurationData.conditions.length === 0">

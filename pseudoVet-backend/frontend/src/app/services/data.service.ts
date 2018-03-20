@@ -67,4 +67,20 @@ export class DataService {
   deleteDatasetByTitle (title: string) {
     return this.http.delete(`${environment.baseUri}/datasets?title=${title}`).toPromise();
   }
+
+  /**
+   * get configurations
+   */
+  getConfigurations () {
+    return this.http.get(`${environment.baseUri}/datasetConfigurations`).toPromise();
+  }
+
+  /**
+   * delete config by title
+   * @param {string} title the config title
+   */
+  deleteConfigByTitle (title: string) {
+    return this.http.delete(`${environment.baseUri}/datasetConfigurations?title=${title}`).toPromise();
+  }
+
 }

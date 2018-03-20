@@ -1,4 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 
 // app routing
@@ -55,6 +56,7 @@ import { NgProgressHttpModule } from '@ngx-progressbar/http';
     }),
     NgProgressModule.forRoot(),
     NgProgressHttpModule,
+    FormsModule,
   ],
   providers: [
     NumberPipe,

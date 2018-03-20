@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../services/data.service';
-import { map, find, indexOf, isUndefined, filter, each, cloneDeep } from 'lodash';
+import { map, find, indexOf, isUndefined, filter, each, cloneDeep, intersectionBy } from 'lodash';
 import { saveAs } from 'file-saver/FileSaver';
 import { AppConfig } from '../../config';
 import { UtilService } from '../../services/util.service';
@@ -26,6 +26,7 @@ export class ConfigurationComponent implements OnInit {
     warEnd: { d: '', m: '', y: '' },
     selectedConfigurations: [],
     selectedConditions: [],
+    year: new Date().getUTCFullYear()
   };
   configurationSave = false;
   exportModal = false;
@@ -104,7 +105,7 @@ export class ConfigurationComponent implements OnInit {
       }
     }).catch(err => {
       console.error(err);
-      this.toastr.error(err.message);
+      this.toastr.error(err.error ? err.error.message : err.message);
     });
   }
 
@@ -150,19 +151,29 @@ export class ConfigurationComponent implements OnInit {
    */
   step1Validation () {
     let error = false;
-    const mandatory = ['title', 'patients', 'male', 'female', 'war'];
+    const mandatory = ['title', 'patients', 'male', 'female', 'war', 'year'];
     each(mandatory, (label) => {
-      if (this.configurationData[label] === '') {
+      if (this.configurationData[label].toString().trim() === '' || this.configurationData['patients'] <= 0) {
         error = true;
       }
     });
 
     const timeMandatory = ['d', 'm', 'y'];
     each(timeMandatory, (label) => {
-      if (this.configurationData.warStart[label] === '' || this.configurationData.warEnd[label] === '') {
+      if (this.configurationData.warStart[label] === '') {
         error = true;
       }
     });
+
+    if (!error) {
+      const startDate = new Date(this.configurationData.warStart['y'], this.configurationData.warStart['m'],
+                                    this.configurationData.warStart['d']);
+      const endDate = new Date(this.configurationData.year, 12, 31);
+
+      if (endDate <= startDate) {
+        error = true;
+      }
+    }
     return error;
   }
 
@@ -191,10 +202,26 @@ export class ConfigurationComponent implements OnInit {
     if (this.selectedTab === 2) { // this mean switch to MORBIDITY
       this.dataService.getMorbiditiesByWarName(this.configurationData.war).then(res => {
         this.morbidities = res as any;
+        this.configurationData.configurations = intersectionBy(this.configurationData.configurations,
+               this.morbidities, 'icd10Code');
+        this.configurationData.selectedConfigurations =  this.configurationData.configurations;
       }).catch(err => {
         console.error(err);
-        this.toastr.error(err.message);
+        this.toastr.error(err.error ? err.error.message : err.message);
       });
+    }
+  }
+
+  /**
+   * on next button click
+   */
+  onStep2NextClick () {
+    this.selectedTab = this.selectedTab + 1;
+    if (this.selectedTab === 3) { // this mean switch to Related Conditions
+      // For now populate the related conditions same as morbidity
+      this.configurationData.conditions = intersectionBy(this.configurationData.conditions,
+               this.morbidities, 'icd10Code');
+        this.configurationData.selectedConditions =  this.configurationData.conditions;
     }
   }
 
@@ -250,7 +277,8 @@ export class ConfigurationComponent implements OnInit {
       const index = find(selectedOptions, { 'name': items[i] });
       if (isUndefined(index)) {
         this.configurationData.conditions.push({
-          'name': items[i],
+          'icd10Code': items[i].icd10Code,
+          'name': items[i].name,
           'diagnosis': '0%',
           'acquires': '0%',
           'profiles': '0',
@@ -356,7 +384,7 @@ export class ConfigurationComponent implements OnInit {
       this.toastr.success('Configuration save succeed');
     }).catch(err => {
       console.error(err);
-      this.toastr.error(err.message);
+      this.toastr.error(err.error ? err.error.message : err.message);
     });
   }
 
@@ -385,7 +413,7 @@ export class ConfigurationComponent implements OnInit {
     }).catch(err => {
       console.error(err);
       this.ngProgress.completed();
-      this.toastr.error(err.message);
+      this.toastr.error(err.error ? err.error.message : err.message);
     });
   }
 
@@ -396,8 +424,8 @@ export class ConfigurationComponent implements OnInit {
    */
   convertToBackendConfiguration (frontendConfig) {
     const configObject = {
-      title: frontendConfig.title,
-      numberOfPatients: parseInt(frontendConfig.patients, 10),
+      title: frontendConfig.title.trim(),
+      numberOfPatients: parseInt(frontendConfig.patients.toString().replace(/,/g , ''), 10),
       maleRatio: parseFloat(frontendConfig.male),
       femaleRatio: parseFloat(frontendConfig.female),
       morbiditiesData: frontendConfig.configurations.map(m => ({
@@ -408,8 +436,16 @@ export class ConfigurationComponent implements OnInit {
         percentOfPopulationWithDiagnosisRisk: parseFloat(m.diagnosis.substr(0, m.diagnosis.length - 1)),
         percentOfProbabilityToAcquireDiagnosis: parseFloat(m.acquires.substr(0, m.acquires.length - 1)),
       })),
+      relatedConditionsData: frontendConfig.conditions.map(m => ({
+        icd10Code: m.icd10Code,
+        name: m.name,
+        exclusionRules: UtilService.getExclusionsByItem(m),
+        numberOfEncounters: parseFloat(m.profiles),
+        percentOfPopulationWithDiagnosisRisk: parseFloat(m.diagnosis.substr(0, m.diagnosis.length - 1)),
+        percentOfProbabilityToAcquireDiagnosis: parseFloat(m.acquires.substr(0, m.acquires.length - 1)),
+      })),
       warEra: this.warEars.find(w => w.warEra === frontendConfig.war),
-      year: frontendConfig.year
+      year: parseInt(frontendConfig.year, 10)
     };
     if (!configObject.year) {
       configObject.year = new Date().getUTCFullYear();
@@ -432,18 +468,26 @@ export class ConfigurationComponent implements OnInit {
     return { // empty configuration
       title: backendConfig.title,
       patients: backendConfig.numberOfPatients,
-      male: backendConfig.maleRatio,
-      female: backendConfig.femaleRatio,
+      male: backendConfig.maleRatio || (backendConfig.femaleRatio ? 100 - backendConfig.femaleRatio : 0),
+      female: backendConfig.femaleRatio || (backendConfig.maleRatio ? 100 - backendConfig.maleRatio : 0),
       configurations: backendConfig.morbiditiesData.map(m => ({
         icd10Code: m.icd10Code,
         name: m.name,
-        age: UtilService.getAgeFromExclusions(m.exclusionRules),
-        gender: UtilService.getGenderFromExclusions(m.exclusionRules),
-        diagnosis: m.percentOfPopulationWithDiagnosisRisk + '%',
-        acquires: m.percentOfProbabilityToAcquireDiagnosis + '%',
-        profiles: m.numberOfEncounters,
+        age: UtilService.getAgeFromExclusions(m.exclusionRules || ''),
+        gender: UtilService.getGenderFromExclusions(m.exclusionRules || ''),
+        diagnosis: (m.percentOfPopulationWithDiagnosisRisk || 0) + '%',
+        acquires: (m.percentOfProbabilityToAcquireDiagnosis || 0) + '%',
+        profiles: m.numberOfEncounters || 0,
       })),
-      conditions: [],
+      conditions: backendConfig.relatedConditionsData ? backendConfig.relatedConditionsData.map(m => ({
+        icd10Code: m.icd10Code,
+        name: m.name,
+        age: UtilService.getAgeFromExclusions(m.exclusionRules || ''),
+        gender: UtilService.getGenderFromExclusions(m.exclusionRules || ''),
+        diagnosis: (m.percentOfPopulationWithDiagnosisRisk || 0) + '%',
+        acquires: (m.percentOfProbabilityToAcquireDiagnosis || 0) + '%',
+        profiles: m.numberOfEncounters || 0,
+      })) : [],
       war: backendConfig.warEra.warEra,
       warStart: this.getDMYByTimeString(backendConfig.warEra.warEraStartDate),
       warEnd: this.getDMYByTimeString(backendConfig.warEra.warEraEndDate),
@@ -451,6 +495,7 @@ export class ConfigurationComponent implements OnInit {
         icd10Code: m.icd10Code,
         name: m.name,
       })),
+      year: backendConfig.year || new Date().getUTCFullYear(),
       selectedConditions: [],
     };
   }
@@ -461,13 +506,14 @@ export class ConfigurationComponent implements OnInit {
    * @param type the value type, male/female
    */
   onRadioChange (value, type) {
-    let v = parseInt(value, 10);
+    let v = parseFloat(value);
     if (!isNaN(v)) {
+      this.configurationData[type] = value;
       if (v > 100) {
         v = 100;
         this.configurationData[type] = `${v}`;
       }
-      this.configurationData[type === 'male' ? 'female' : 'male'] = 100 - v;
+      this.configurationData[type === 'male' ? 'female' : 'male'] = Math.round((100 - v) * 100) / 100;
     }
   }
 }

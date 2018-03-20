@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Directive, ElementRef, HostListener, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { NumberPipe } from '../pipe/number.pipe';
 
 @Directive({
@@ -6,6 +6,11 @@ import { NumberPipe } from '../pipe/number.pipe';
 })
 export class NumberDirective implements OnInit {
   private el: any;
+  @Output() ngModelChange: EventEmitter<any> = new EventEmitter();
+  @Input() roundOff = true;
+  @Input() mustFormat = true;
+  @Input() maxVal: number;
+  @Input() minVal: number;
 
   constructor (private elementRef: ElementRef,
                private numberPipe: NumberPipe) {
@@ -19,13 +24,13 @@ export class NumberDirective implements OnInit {
 
   @HostListener('focus', ['$event.target.value'])
   onFocus (value) {
-    this.el.value = this.numberPipe.parse(value);
+    const result = this.numberPipe.parse(value, this.roundOff, this.mustFormat, this.minVal, this.maxVal);
+    this.ngModelChange.emit(result);
   }
 
   @HostListener('blur', ['$event.target.value'])
   onBlur (value) {
-    this.el.value = this.numberPipe.transform(value);
+    const result = this.numberPipe.transform(value, this.roundOff, this.mustFormat, this.minVal, this.maxVal);
+    this.ngModelChange.emit(result);
   }
-
-
 }

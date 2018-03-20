@@ -46,7 +46,7 @@
   <!-- regeneration -->
   <app-modal
     (close)="reGenerated = false"
-    title="Regenrate Dataset"
+    title="Regenerate Dataset"
     subtitle="Current configurations will be altered."
     type="info"
     *ngIf="reGenerated"
@@ -55,6 +55,34 @@
   >
     <button class="blue-button regenerate" (click)="onReGeneratedDataset()">Regenerate</button>
     <button class="cancel-button" (click)="reGenerated = false">Cancel</button>
+  </app-modal>
+
+  <!-- generate dataset -->
+  <app-modal
+    (close)="generated = false"
+    title="Generate Dataset"
+    subtitle="Current configurations will be altered."
+    type="info"
+    *ngIf="generated"
+    [name]="generatedObj.name"
+    [text]="generatedObj.text"
+  >
+    <button class="blue-button regenerate" (click)="onGeneratedDataset()">Generate Datset</button>
+    <button class="cancel-button" (click)="generated = false">Cancel</button>
+  </app-modal>
+
+  <!-- Delete Dataset Config -->
+  <app-modal
+    (close)="deleteConfigItem = false"
+    title="Delete Dataset Config"
+    subtitle="You are about to delete a dataset configuration. This action can’t be undone."
+    type="warning"
+    *ngIf="deleteConfigItem"
+    [name]="deleteConfigObj.name"
+    [text]="deleteConfigObj.text"
+  >
+    <button class="red-button" (click)="onRemoveConfigItem()">Delete</button>
+    <button class="cancel-button" (click)="deleteConfigItem = false">Cancel</button>
   </app-modal>
 
   <h1 class="heading">DATASETS</h1>
@@ -67,33 +95,39 @@
 
 
   <ng-container *ngIf="dashboardData">
-    <h5 class="heading-small first">In progress</h5>
+    <h5 class="heading-small first">Configurations</h5>
     <div class="table-wrapper">
       <table class="table dashboard-table">
         <tr>
           <th>#</th>
-          <th>DATATSET TITLE</th>
-          <th>PROGRESS</th>
-          <th>ETA</th>
+          <th>CONFIGURATION TITLE</th>
+          <th colspan="2" class="with-button">GENERAL DEMOGRAPHICS
+            <small>(War Era / Patients / Gender ratio)</small>
+          </th>
         </tr>
-        <tr *ngFor="let item of inProgressDatasets; let $i=index">
+        <tr *ngFor="let item of configurations; let $i=index">
           <td>
-            <a (click)="removeInProgressItem($i)" href="javascript:;" class="remove-icon"></a>
+            <a (click)="removeConfigItem($i)" href="javascript:;" class="remove-icon"></a>
             <span class="number">{{$i + 1}}</span></td>
-          <td>{{item.name}}</td>
-          <td>
-            <app-progress [progress]="item.progress"></app-progress>
+          <td>{{item.title}}</td>
+          <td>{{item.warEra.warEra + ' / '
+            + item.numberOfPatients.toLocaleString() + ' / '
+            + (item.maleRatio || (item.femaleRatio ? 100 - item.femaleRatio : 0)) + ':' + (item.femaleRatio || (item.maleRatio ? 100 - item.maleRatio : 0))}}
           </td>
-          <td>{{item.eta}}</td>
+          <td class="action-button">
+            <button (click)="generateDataset($i)" class="small-button large">Generate Dataset</button>
+            <button (click)="onConfigurationEditClick($i)" class="small-button">Edit</button>
+            <button (click)="onExportClick($i)" class="small-button">Export</button>
+          </td>
         </tr>
-        <tr *ngIf="inProgressDatasets.length === 0" class="no-records">
-          <td colspan="5"><div class="text">NO RECORDS FOUND</div></td>
+        <tr *ngIf="configurations.length === 0" class="no-records">
+          <td colspan="4"><div class="text">NO RECORDS FOUND</div></td>
         </tr>
       </table>
 
 
     </div>
-    <h5 class="heading-small">Generated</h5>
+    <h5 class="heading-small">Generated Datasets</h5>
     <div class="table-wrapper">
       <table class="table dashboard-table">
         <tr>
@@ -117,7 +151,7 @@
           </td>
           <td class="action-button">
             <button (click)="reGeneratedItem($i)" class="small-button large">Regenerate</button>
-            <button (click)="onConfigurationEditClick($i)" class="small-button">Edit</button>
+            <button (click)="onDatsetEditConfigClick($i)" class="small-button large">Edit Config</button>
           </td>
         </tr>
 
