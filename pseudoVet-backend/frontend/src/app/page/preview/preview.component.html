@@ -95,9 +95,9 @@
         <tr *ngFor="let item of previewData.morbiditiesData; let $i=index">
           <td>{{$i + 1}}</td>
           <td>{{item.icd10Code + '-' + item.name}}</td>
-          <td><span class="span">{{item.percentOfPopulationWithDiagnosisRisk}}%</span></td>
-          <td><span class="span">{{item.percentOfProbabilityToAcquireDiagnosis}}%</span></td>
-          <td><span class="span">{{item.numberOfEncounters}}</span></td>
+          <td><span class="span">{{item.percentOfPopulationWithDiagnosisRisk || 0}}%</span></td>
+          <td><span class="span">{{item.percentOfProbabilityToAcquireDiagnosis || 0}}%</span></td>
+          <td><span class="span">{{item.numberOfEncounters || 0}}</span></td>
           <td>{{getGenderAndAgeFromExclusions(item.exclusionRules)}}</td>
         </tr>
       </table>
@@ -115,13 +115,13 @@
             (Gender)
           </th>
         </tr>
-        <tr *ngFor="let item of previewData.conditions; let $i=index">
+        <tr *ngFor="let item of previewData.relatedConditionsData; let $i=index">
           <td>{{$i + 1}}</td>
-          <td>{{item.name}}</td>
-          <td><span class="span">{{item.diagnosis}}</span></td>
-          <td><span class="span">{{item.acquires}}</span></td>
-          <td><span class="span">{{item.profiles}}</span></td>
-          <td>{{item.gender}}</td>
+          <td>{{item.icd10Code + '-' + item.name}}</td>
+          <td><span class="span">{{item.percentOfPopulationWithDiagnosisRisk || 0}}%</span></td>
+          <td><span class="span">{{item.percentOfProbabilityToAcquireDiagnosis || 0}}%</span></td>
+          <td><span class="span">{{item.numberOfEncounters || 0}}</span></td>
+          <td>{{getGenderAndAgeFromExclusions(item.exclusionRules)}}</td>
         </tr>
       </table>
 

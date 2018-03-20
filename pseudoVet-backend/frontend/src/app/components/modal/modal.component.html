@@ -26,10 +26,9 @@
 
     <h5 class="age-title">Age(filer by <= this age)</h5>
     <div class="clearfix">
-      <input [value]="age"
-             (input)="ageInput($event.target.value)"
-             type="number"
-             class="form-element age-input"/>
+      <input [ngModel]="age"
+             (ngModelChange)="ageInput($event)"
+             class="form-element age-input" appNumber maxlength="3"/>
     </div>
   </div>
 

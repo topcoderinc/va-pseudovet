@@ -242,7 +242,8 @@ small {
         display: none;
         position: absolute;
         left: -12px;
-        top: 8px;
+        vertical-align: middle;
+        top: 30%;
         &:hover {
           opacity: $hover-opacity;
         }

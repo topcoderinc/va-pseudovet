@@ -1,6 +1,5 @@
 export class UtilService {
   static GENDER_CONDITIONS = {
-    'none': `gender == 'Female' or gender == 'Male'`,
     'female': `gender == 'Female'`,
     'male': `gender == 'Male'`
   };
@@ -11,12 +10,14 @@ export class UtilService {
    * @return {string} the gender
    */
   static getGenderFromExclusions (rule) {
-    if (rule.indexOf(UtilService.GENDER_CONDITIONS['none']) >= 0) {
-      return 'None';
-    } else if (rule.indexOf(UtilService.GENDER_CONDITIONS['female']) >= 0) {
-      return 'Female';
-    } else if (rule.indexOf(UtilService.GENDER_CONDITIONS['male']) >= 0) {
-      return 'Male';
+    if (rule) {
+      if (rule.indexOf(UtilService.GENDER_CONDITIONS['none']) >= 0) {
+        return 'None';
+      } else if (rule.indexOf(UtilService.GENDER_CONDITIONS['female']) >= 0) {
+        return 'Female';
+      } else if (rule.indexOf(UtilService.GENDER_CONDITIONS['male']) >= 0) {
+        return 'Male';
+      }
     }
     return 'None';
   }
@@ -27,11 +28,14 @@ export class UtilService {
    * @return {string} the age value
    */
   static getAgeFromExclusions (rule) {
-    const index = rule.indexOf('total_age');
-    if (index < 0) {
-      return '';
+    if (rule) {
+      const index = rule.indexOf('total_age');
+      if (index < 0) {
+        return '';
+      }
+      return rule.substr(index + 'total_age <= '.length, rule.length);
     }
-    return rule.substr(index + 'total_age <= '.length, rule.length);
+    return '';
   }
 
   /**
@@ -40,7 +44,7 @@ export class UtilService {
    */
   static getExclusionsByItem (item) {
     let exclude = UtilService.GENDER_CONDITIONS[item.gender.toLowerCase()];
-    if (item.age.length === 0) {
+    if (!item.age || item.age.length === 0 || item.age <= 0) {
       return exclude;
     }
     if (item.gender === 'None') {
@@ -58,6 +62,6 @@ export class UtilService {
    */
   static getDescriptionByBackendConfig (configObj) {
     return `${configObj.warEra.warEra} / ${configObj.numberOfPatients} patients / ${
-      configObj.maleRatio}:${configObj.femaleRatio} male-female ratio"`;
+      configObj.maleRatio}:${configObj.femaleRatio} male-female ratio`;
   }
 }

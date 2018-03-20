@@ -4,6 +4,7 @@ import { UtilService } from '../../services/util.service';
 import { Router } from '@angular/router';
 import { AppConfig } from '../../config';
 import { ToastrService } from 'ngx-toastr';
+import { saveAs } from 'file-saver/FileSaver';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 export class DashboardComponent implements OnInit {
   dashboardData: any = {};
   datasets: any = [];
+  configurations: any = [];
   inProgressDatasets: any = [];
   deleteInProgress = false;
   deleteInProgressObj: any = {};
@@ -22,6 +24,10 @@ export class DashboardComponent implements OnInit {
   exportGeneratedObj: any = {};
   reGenerated = false;
   reGeneratedObj: any = {};
+  generated = false;
+  generatedObj: any = {};
+  deleteConfigItem = false;
+  deleteConfigObj: any = {};
   menu = [
     { name: 'Dashboard', url: '/dashboard', subname: '', active: true },
     { name: 'Create configuration', url: '/configuration/create', subname: '' },
@@ -31,7 +37,20 @@ export class DashboardComponent implements OnInit {
   constructor (private dataService: DataService,
                private toastr: ToastrService,
                private router: Router) {
+    this.fetchConfigurations();
     this.fetchDatasets();
+  }
+
+  /**
+   * fetch configurations
+   */
+  fetchConfigurations () {
+    this.dataService.getConfigurations().then(res => {
+      this.configurations = res;
+    }).catch(err => {
+      console.error(err);
+      this.toastr.error(err.error ? err.error.message : err.message);
+    });
   }
 
   /**
@@ -42,7 +61,7 @@ export class DashboardComponent implements OnInit {
       this.datasets = res;
     }).catch(err => {
       console.error(err);
-      this.toastr.error(err.message);
+      this.toastr.error(err.error ? err.error.message : err.message);
     });
   }
 
@@ -80,7 +99,8 @@ export class DashboardComponent implements OnInit {
     this.deleteGeneratedObj = {
       index,
       name: configObj.title,
-      text: UtilService.getDescriptionByBackendConfig(configObj)
+      text: UtilService.getDescriptionByBackendConfig(configObj),
+      datasetName : dataset.datasetName
     };
   }
 
@@ -88,13 +108,41 @@ export class DashboardComponent implements OnInit {
    * on delete generated item
    */
   onRemoveGeneratedItem () {
-    this.dataService.deleteDatasetByTitle(this.deleteGeneratedObj.name).then(res => {
+    this.dataService.deleteDatasetByTitle(this.deleteGeneratedObj.datasetName).then(res => {
       this.datasets.splice(this.deleteGeneratedObj.index, 1);
       this.deleteGenerated = false;
       this.toastr.success('Dataset remove succeed');
     }).catch(err => {
       console.error(err);
-      this.toastr.error(err.message);
+      this.toastr.error(err.error ? err.error.message : err.message);
+    });
+  }
+
+  /**
+   * remove items from config
+   * @param index - item index
+   */
+  removeConfigItem (index) {
+    this.deleteConfigItem = true;
+    const configObj = this.configurations[index];
+    this.deleteConfigObj = {
+      index,
+      name: configObj.title,
+      text: UtilService.getDescriptionByBackendConfig(configObj)
+    };
+  }
+
+  /**
+   * on delete config item
+   */
+  onRemoveConfigItem () {
+    this.dataService.deleteConfigByTitle(this.deleteConfigObj.name).then(res => {
+      this.configurations.splice(this.deleteConfigObj.index, 1);
+      this.deleteConfigItem = false;
+      this.toastr.success('Dataset Configuration remove succeeded');
+    }).catch(err => {
+      console.error(err);
+      this.toastr.error(err.error ? err.error.message : err.message);
     });
   }
 
@@ -115,6 +163,35 @@ export class DashboardComponent implements OnInit {
       name,
       text
     };
+  }
+
+  /**
+   * Generate Dataset Items
+   * @param index - item index
+   */
+  generateDataset (index) {
+    this.generated = true;
+    const configObj = this.configurations[index];
+    this.generatedObj = {
+      index,
+      name: configObj.title,
+      text: UtilService.getDescriptionByBackendConfig(configObj)
+    };
+  }
+
+  /**
+   * on generated button click
+   */
+  onGeneratedDataset () {
+    this.dataService.generateDatasets(this.generatedObj.name).then(res => {
+      this.generated = false;
+      this.generatedObj = null;
+      this.fetchDatasets();
+      this.toastr.success('Dataset Generate succeed');
+    }).catch(err => {
+      console.error(err);
+      this.toastr.error(err.error ? err.error.message : err.message);
+    });
   }
 
   /**
@@ -143,17 +220,41 @@ export class DashboardComponent implements OnInit {
       this.toastr.success('Dataset reGenerate succeed');
     }).catch(err => {
       console.error(err);
-      this.toastr.error(err.message);
+      this.toastr.error(err.error ? err.error.message : err.message);
     });
+  }
+
+  /**
+   * on edit configuration
+   */
+  onConfigurationEditClick (index) {
+    const configObj = this.configurations[index];
+    localStorage.setItem(AppConfig.EDIT_CONFIG_KEY, JSON.stringify(configObj));
+    this.router.navigate(['/configuration/dashboard/edit']);
   }
 
   /**
    * on dataset edit configuration
    */
-  onConfigurationEditClick (index) {
+  onDatsetEditConfigClick (index) {
     const configObj = this.datasets[index].configuration;
     localStorage.setItem(AppConfig.EDIT_CONFIG_KEY, JSON.stringify(configObj));
     this.router.navigate(['/configuration/dashboard/edit']);
+  }
+
+  /**
+   * on export button click
+   */
+  onExportClick (index) {
+    const configObj = this.configurations[index];
+    this.exportGenerated = true;
+    this.exportGeneratedObj = {
+      index,
+      name: configObj.title,
+      text: UtilService.getDescriptionByBackendConfig(configObj)
+    };
+    const blob = new Blob([JSON.stringify(configObj, null, 2)], { type: 'text/plain' });
+    saveAs(blob, configObj.title + '.json');
   }
 
 

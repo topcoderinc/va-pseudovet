@@ -38,9 +38,9 @@ def delete_dataset_by_title(title):
     :param title: the dataset title
     """
 
-    dataset_path = join(GENERATED_DATASETS_DIR, '{0}.{1}'.format(DATASET_PREFIX, title))
+    dataset_path = join(GENERATED_DATASETS_DIR, title)
     if not exists(dataset_path):
-        raise EntityNotFoundError("Dataset not found where title = " + title)
+        raise EntityNotFoundError("Dataset not found where name = " + title)
     rmtree(dataset_path)
 
 
@@ -57,16 +57,19 @@ def get_all_datasets():
     for dataset_name in datasets_folders:
         if not dataset_name.startswith(DATASET_PREFIX):  # not generate by rest api
             continue
-        name = dataset_name[len(DATASET_PREFIX) + 1: len(dataset_name)]
+        name = dataset_name.split('.')[1]
         try:
             configurations = dataset_configuration_service.get_configuration_by_title(name)
             datasets.append({
                 'title': name,
                 'completedOn': datetime.fromtimestamp(
                     stat(join(GENERATED_DATASETS_DIR, dataset_name)).st_mtime).isoformat(),
-                'configuration': configurations
+                'configuration': configurations,
+                'datasetName': dataset_name
             })
         except Exception as e:
             # if get configuration error, then skip this dataset, so we don't need raise error here
             logger.error(e)
+        if len(datasets) > 0:
+            datasets = sorted(datasets, key=lambda k: k['completedOn'], reverse=True)
     return datasets

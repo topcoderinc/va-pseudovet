@@ -29,6 +29,13 @@ export class MultiSelectComponent implements OnInit {
   }
 
   /**
+   * is option selected
+   */
+  isChecked (option) {
+    return this.copyOfSelectedOptions.filter(item => item.icd10Code === option.icd10Code && item.name === option.name).length > 0;
+  }
+
+  /**
    * Remove selected Item
    * @param e - event
    * @param index - index of the item to be removed

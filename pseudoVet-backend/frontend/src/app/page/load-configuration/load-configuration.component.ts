@@ -75,7 +75,7 @@ export class LoadConfigurationComponent implements OnInit {
         try {
           const configObj = JSON.parse(content);
           previewObj.description = UtilService.getDescriptionByBackendConfig(configObj);
-          this.configuration = configObj;
+          this.configuration = this.convertToBackendConfiguration(configObj);
         } catch (e) {
           previewObj.error = true;
           previewObj.msg = 'Configuration file is invalid, please check your file';
@@ -124,14 +124,53 @@ export class LoadConfigurationComponent implements OnInit {
       this.fileSave = true;
     }).catch(err => {
       console.error(err);
-      this.toastr.error(err.message);
+      this.toastr.error(err.error ? err.error.message : err.message);
     });
+  }
+
+  /**
+   * frontend configuration convert to backend configuration, then send this config object to server
+   * @param loadedConfig the uploaded config object
+   * @return the backend config object
+   */
+  convertToBackendConfiguration (loadedConfig) {
+    const configObject = {
+      title: loadedConfig.title.trim(),
+      numberOfPatients:  isNaN(parseInt(loadedConfig.numberOfPatients, 10)) ? 0 : parseInt(loadedConfig.numberOfPatients, 10),
+      maleRatio: isNaN(parseFloat(loadedConfig.maleRatio)) ? 0 : parseInt(loadedConfig.maleRatio, 10),
+      femaleRatio: isNaN(parseFloat(loadedConfig.femaleRatio)) ? 0 : parseInt(loadedConfig.femaleRatio, 10),
+      morbiditiesData: loadedConfig.morbiditiesData.map(m => ({
+        icd10Code: m.icd10Code,
+        name: m.name,
+        exclusionRules: m.exclusionRules,
+        numberOfEncounters: isNaN(parseFloat(m.numberOfEncounters)) ? 0 : parseFloat(m.numberOfEncounters),
+        percentOfPopulationWithDiagnosisRisk: isNaN(parseFloat(m.percentOfPopulationWithDiagnosisRisk))
+                                                                ? 0 : parseFloat(m.percentOfPopulationWithDiagnosisRisk),
+        percentOfProbabilityToAcquireDiagnosis: isNaN(parseFloat(m.percentOfProbabilityToAcquireDiagnosis))
+                                                                ? 0 : parseFloat(m.percentOfProbabilityToAcquireDiagnosis)})),
+      relatedConditionsData: loadedConfig.relatedConditionsData ? loadedConfig.relatedConditionsData.map(m => ({
+        icd10Code: m.icd10Code,
+        name: m.name,
+        exclusionRules: m.exclusionRules,
+        numberOfEncounters: isNaN(parseFloat(m.numberOfEncounters)) ? 0 : parseFloat(m.numberOfEncounters),
+        percentOfPopulationWithDiagnosisRisk: isNaN(parseFloat(m.percentOfPopulationWithDiagnosisRisk))
+                                                                ? 0 : parseFloat(m.percentOfPopulationWithDiagnosisRisk),
+        percentOfProbabilityToAcquireDiagnosis: isNaN(parseFloat(m.percentOfProbabilityToAcquireDiagnosis))
+                                                                ? 0 : parseFloat(m.percentOfProbabilityToAcquireDiagnosis)})) : [],
+      warEra: loadedConfig.warEra,
+      year: loadedConfig.year
+    };
+    if (!configObject.year) {
+      configObject.year = new Date().getUTCFullYear();
+    }
+    return configObject;
   }
 
   /**
    * on preview button click
    */
   onPreviewClick () {
+    this.configuration.name = this.filePreviewObject.name;
     localStorage.setItem(AppConfig.PREVIEW_CONFIG_KEY, JSON.stringify(this.configuration));
     this.router.navigate(['preview']);
   }

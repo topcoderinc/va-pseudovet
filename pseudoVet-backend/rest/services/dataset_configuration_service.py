@@ -5,8 +5,8 @@ The dataset configuration will be stored in the file named DatasetConfiguration.
 If the file with such name already exists, it will be overwritten.
 """
 
-from os.path import isfile, join, relpath
-from os import listdir
+from os.path import isfile, join, relpath, exists
+from os import listdir, remove
 
 from cerberus import Validator
 
@@ -38,6 +38,16 @@ morbidity_schema = {
     'exclusionRules': {'type': 'string'},
 }
 
+# the related conditions validation schema
+relatedConditions_schema = {
+    'name': {'type': 'string'},
+    'icd10Code': {'type': 'string', 'required': True},
+    'percentOfPopulationWithDiagnosisRisk': {'type': 'float'},
+    'percentOfProbabilityToAcquireDiagnosis': {'type': 'float'},
+    'numberOfEncounters': {'type': 'integer'},
+    'exclusionRules': {'type': 'string'},
+}
+
 # the configuration validation schema
 dataset_configuration_schema = {
     'title': {'type': 'string', 'required': True},
@@ -46,8 +56,9 @@ dataset_configuration_schema = {
     'maleRatio': {'type': 'float', 'required': False},
     'femaleRatio': {'type': 'float', 'required': False},
     # Cerberus currently doesn't support validation of list elements properly
-    # thus morbiditiesData items are validated separately
+    # thus morbiditiesData & relatedConditions items are validated separately
     'morbiditiesData': {'type': 'list', 'minlength': 1, 'required': True},
+    'relatedConditionsData': {'type': 'list', 'required': False},
     'outputFolder': {'type': 'string'},
     'year': {'type': 'integer', 'required': True},
 }
@@ -71,7 +82,12 @@ def validate_document(document):
                 if not cerberus_validator.validate(item, morbidity_schema):
                     raise BadRequestError("Request validation failed for morbiditiesData. Info: " +
                                           str(cerberus_validator.errors))
-
+        if 'relatedConditionsData' in body_entity:
+            relatedConditions_data = body_entity['relatedConditionsData']
+            for item in relatedConditions_data:
+                if not cerberus_validator.validate(item, relatedConditions_schema):
+                    raise BadRequestError("Request validation failed for relatedConditionsData. Info: " +
+                                          str(cerberus_validator.errors))
 
 # register custom validator to validate "morbiditiesData" items
 custom_validators.append(validate_document)
@@ -163,7 +179,7 @@ def get(title):
         files = [f for f in listdir(DATASET_CONFIGURATIONS_DIR) if isfile(join(DATASET_CONFIGURATIONS_DIR, f))]
         for file in files:
             configurations.append(read_configuration_from_file(DATASET_CONFIGURATIONS_DIR + '/' + file))
-        return configurations
+        return sorted(configurations, key=lambda k: k['title'].lower())
     else:
         # put single configuration to a list
         return [get_configuration_by_title(title)]
@@ -180,3 +196,16 @@ def get_configuration_by_title(title):
         return read_configuration_from_file(configuration_file_path)
     else:
         raise EntityNotFoundError('Cannot find configuration file for title ' + title)
+
+@service(schema={'title': {'type': 'string', 'required': True}})
+def delete_config_by_title(title):
+    """
+    Delete dateset Config by title
+    It raises EntityNotFoundError if dataset config not found
+    :param title: the dataset Config title
+    """
+
+    config_file = join(DATASET_CONFIGURATIONS_DIR, '{0}.{1}.{2}'.format(CONFIGURATION_PREFIX, title, 'json'))
+    if not exists(config_file):
+        raise EntityNotFoundError("Dataset config not found where title = " + title)
+    remove(config_file)

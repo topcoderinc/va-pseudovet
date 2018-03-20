@@ -50,8 +50,8 @@ def setup_work_session(output_dir, create_session_path=True, config_title=None):
     global session_id
 
     # generate new session ID from the current timestamp
-    session_id = config_title and '{0}.{1}'.format(DATASET_PREFIX,
-                                                   config_title) or datetime.datetime.now().isoformat().replace(':', '')
+    session_id = config_title and '{0}.{1}.{2}'.format(DATASET_PREFIX,
+                                                   config_title, datetime.datetime.now().strftime("%Y%m%d%H%M%S")) or datetime.datetime.now().isoformat().replace(':', '')
     work_dir = output_dir
 
     # load data sources if they haven't been loaded previously
@@ -573,7 +573,7 @@ def generate_from_config(dataset_config):
         raise ValueError('End report year is missing in the dataset configuration')
     end_year = dataset_config['year']
     if end_year <= full_war_era['start_date'].year:
-        raise ValueError('End report year is too small')
+        raise ValueError('End report year must be greater than start date')
 
     # setup output directory
     cur_work_dir = GENERATED_DATASETS_DIR
@@ -592,5 +592,8 @@ def generate_from_config(dataset_config):
             raise ValueError('CSV file for war era with code {0} does not exist'.format(war_code))
         logger.info('Using morbidity probabilities of {0} from configuration file'.format(war_code))
     morbidities_data = dataset_config['morbiditiesData']
+
+    if ('relatedConditionsData' in dataset_config) and (len(dataset_config['relatedConditionsData']) > 0):
+        morbidities_data.extend(dataset_config['relatedConditionsData'])
 
     return generate_records(full_war_era, patients_num, male_ratio, morbidities_data, end_year)

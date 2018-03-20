@@ -68,7 +68,9 @@ export class PreviewComponent implements OnInit {
    * on save button click
    */
   onSaveClick () {
-    this.dataService.createOrUpdatedatasetConfiguration(this.previewData).then(res => {
+    const configuration = this.previewData;
+    delete configuration['name'];
+    this.dataService.createOrUpdatedatasetConfiguration(configuration).then(res => {
       this.configurationSave = true;
     }).catch(err => {
       console.error(err);
