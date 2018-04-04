@@ -66,18 +66,18 @@
     Cancel
   </button>
   <button *ngIf="!create && dashboard" (click)="onSaveClick()"
-          [disabled]="step1Validation() || step2Validation() || step3Validation()"
+          [disabled]="step1Validation() || step2Validation() || step3Validation() || step4Validation()"
           class="success-button float-button long">
     Save
   </button>
   <button *ngIf="!create && !dashboard" (click)="onSaveClick()"
-          [disabled]="step1Validation() || step2Validation() || step3Validation()"
+          [disabled]="step1Validation() || step2Validation() || step3Validation() || step4Validation()"
           class="success-button float-button long">
     Save
   </button>
 
   <button *ngIf="create"
-          [disabled]="step1Validation() || step2Validation() || step3Validation()"
+          [disabled]="step1Validation() || step2Validation() || step3Validation() || step4Validation()"
           class="success-button export-button" (click)="onExportClick()">Export
   </button>
   <div *ngIf="!dashboard" class="preview-header">
@@ -254,7 +254,7 @@
 
       </div>
     </div>
-    <div [ngClass]="{'active': selectedTab === 3, 'completed': !create && !dashboard}" class="accordion">
+    <div [ngClass]="{'active': selectedTab === 3, 'done': selectedTab > 3, 'completed': !create && !dashboard}" class="accordion">
       <div class="accordion-header" (click)="selectedTab = (!create && !dashboard) ? 3 : selectedTab">
         <i class="expand"></i>
         <i class="done" [ngClass]="{'show': selectedTab > 3}"></i>
@@ -311,13 +311,39 @@
             <td>--</td>
           </tr>
         </table>
+        <div class="clearfix">
+          <button [disabled]="step3Validation()" class="blue-button light-blue"
+                  (click)="onStep3NextClick()">Next
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div [ngClass]="{'active': selectedTab === 4, 'completed': !create && !dashboard}" class="accordion">
+      <div class="accordion-header" (click)="selectedTab = (!create && !dashboard) ? 4 : selectedTab">
+        <i class="expand"></i>
+        <i class="done" [ngClass]="{'show': selectedTab > 4}"></i>
+        <span [ngClass]="{'hide': selectedTab > 4}">4.</span>
+        OUTPUT FORMAT
+      </div>
+      <div class="accordion-content">
+
+        <label class="label-element">OUTPUT FORMAT</label>
+        <select
+          [value]="'CCDA'"
+          (change)="$event.target.value"
+          class="form-element">
+          <option value="CCDA">CCDA</option>
+          <option value="FHIR-XML">FHIR-XML</option>
+          <option value="FHIR-JSON">FHIR-JSON</option>
+        </select>
 
         <div class="clearfix">
 
-          <button *ngIf="!create && !dashboard" (click)="onSaveClick()" [disabled]="step3Validation()"
+          <button *ngIf="!create && !dashboard" (click)="onSaveClick()" [disabled]="step4Validation()"
                   class="success-button longlong">Save
           </button>
-          <button *ngIf="!create && dashboard" (click)="onSaveClick()" [disabled]="step3Validation()"
+          <button *ngIf="!create && dashboard" (click)="onSaveClick()" [disabled]="step4Validation()"
                   class="success-button long">
             Save
           </button>
@@ -327,10 +353,10 @@
 
           <button *ngIf="create" class="blue-button light-blue long"
                   (click)="onGenerateClick()"
-                  [disabled]="step3Validation()">
+                  [disabled]="step4Validation()">
             Generate Dataset
           </button>
-          <button *ngIf="create" class="success-button" (click)="onExportClick()" [disabled]="step3Validation()">
+          <button *ngIf="create" class="success-button" (click)="onExportClick()" [disabled]="step4Validation()">
             Export
           </button>
         </div>

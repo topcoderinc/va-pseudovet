@@ -191,6 +191,14 @@ export class ConfigurationComponent implements OnInit {
    * @returns {boolean}
    */
   step3Validation () {
+    return this.configurationData.conditions.length === 0;
+  }
+
+  /**
+   * Validate Step 4
+   * @returns {boolean}
+   */
+  step4Validation () {
     return false;
   }
 
@@ -223,6 +231,13 @@ export class ConfigurationComponent implements OnInit {
                this.morbidities, 'icd10Code');
         this.configurationData.selectedConditions =  this.configurationData.conditions;
     }
+  }
+
+  /**
+   * on next button click, goto step 4
+   */
+  onStep3NextClick() {
+    this.selectedTab = this.selectedTab + 1;
   }
 
   /**

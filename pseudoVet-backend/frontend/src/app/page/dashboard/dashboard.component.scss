@@ -12,6 +12,9 @@
       }
       &.with-button {
         width: 700px;
+        &.generated-table {
+          width: 600px;
+        }
       }
     }
   }
