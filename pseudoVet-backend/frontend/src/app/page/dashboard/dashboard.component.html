@@ -133,8 +133,9 @@
         <tr>
           <th>#</th>
           <th>DATATSET TITLE</th>
+          <th>OUTPUT FORMAT</th>
           <th class="completed-td">COMPLETED ON</th>
-          <th colspan="2" class="with-button">GENERAL DEMOGRAPHICS
+          <th colspan="2" class="with-button generated-table">GENERAL DEMOGRAPHICS
             <small>(War Era / Patients / Gender ratio)</small>
           </th>
         </tr>
@@ -144,6 +145,7 @@
             <span class="number">{{$i + 1}}</span>
           </td>
           <td>{{dataset.title}}</td>
+          <td>CCDA</td>
           <td>{{dataset.completedOn | date:'yyyy-MM-dd HH:mm:ss'}}</td>
           <td>{{dataset.configuration.warEra.warEra + ' / '
             + dataset.configuration.numberOfPatients.toLocaleString() + ' / '
