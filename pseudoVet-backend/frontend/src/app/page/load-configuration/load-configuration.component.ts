@@ -158,6 +158,7 @@ export class LoadConfigurationComponent implements OnInit {
         percentOfProbabilityToAcquireDiagnosis: isNaN(parseFloat(m.percentOfProbabilityToAcquireDiagnosis))
                                                                 ? 0 : parseFloat(m.percentOfProbabilityToAcquireDiagnosis)})) : [],
       warEra: loadedConfig.warEra,
+      outputFormat: loadedConfig.outputFormat,
       year: loadedConfig.year
     };
     if (!configObject.year) {

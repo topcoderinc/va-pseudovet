@@ -26,7 +26,8 @@ export class ConfigurationComponent implements OnInit {
     warEnd: { d: '', m: '', y: '' },
     selectedConfigurations: [],
     selectedConditions: [],
-    year: new Date().getUTCFullYear()
+    year: new Date().getUTCFullYear(),
+    outputFormat: '',
   };
   configurationSave = false;
   exportModal = false;
@@ -191,7 +192,15 @@ export class ConfigurationComponent implements OnInit {
    * @returns {boolean}
    */
   step3Validation () {
-    return false;
+    return this.configurationData.conditions.length === 0;
+  }
+
+  /**
+   * Validate Step 4
+   * @returns {boolean}
+   */
+  step4Validation () {
+    return this.configurationData.outputFormat === '';
   }
 
   /**
@@ -223,6 +232,13 @@ export class ConfigurationComponent implements OnInit {
                this.morbidities, 'icd10Code');
         this.configurationData.selectedConditions =  this.configurationData.conditions;
     }
+  }
+
+  /**
+   * on next button click, goto step 4
+   */
+  onStep3NextClick() {
+    this.selectedTab = this.selectedTab + 1;
   }
 
   /**
@@ -418,6 +434,19 @@ export class ConfigurationComponent implements OnInit {
   }
 
   /**
+   * convert percent to float
+   * @param v the percent value
+   * @return {number} the float value
+   */
+  toFloat(v) {
+    if (!v) {
+      return 0;
+    }
+    const vStr = v.toString().replace('%', '');
+    return parseFloat(vStr);
+  }
+
+  /**
    * frontend configuration convert to backend configuration, then send this config object to server
    * @param frontendConfig the frontend config object
    * @return the backend config object
@@ -433,18 +462,19 @@ export class ConfigurationComponent implements OnInit {
         name: m.name,
         exclusionRules: UtilService.getExclusionsByItem(m),
         numberOfEncounters: parseFloat(m.profiles),
-        percentOfPopulationWithDiagnosisRisk: parseFloat(m.diagnosis.substr(0, m.diagnosis.length - 1)),
-        percentOfProbabilityToAcquireDiagnosis: parseFloat(m.acquires.substr(0, m.acquires.length - 1)),
+        percentOfPopulationWithDiagnosisRisk: this.toFloat(m.diagnosis),
+        percentOfProbabilityToAcquireDiagnosis: this.toFloat(m.acquires),
       })),
       relatedConditionsData: frontendConfig.conditions.map(m => ({
         icd10Code: m.icd10Code,
         name: m.name,
         exclusionRules: UtilService.getExclusionsByItem(m),
         numberOfEncounters: parseFloat(m.profiles),
-        percentOfPopulationWithDiagnosisRisk: parseFloat(m.diagnosis.substr(0, m.diagnosis.length - 1)),
-        percentOfProbabilityToAcquireDiagnosis: parseFloat(m.acquires.substr(0, m.acquires.length - 1)),
+        percentOfPopulationWithDiagnosisRisk: this.toFloat(m.diagnosis),
+        percentOfProbabilityToAcquireDiagnosis: this.toFloat(m.acquires),
       })),
       warEra: this.warEars.find(w => w.warEra === frontendConfig.war),
+      outputFormat: frontendConfig.outputFormat,
       year: parseInt(frontendConfig.year, 10)
     };
     if (!configObject.year) {
@@ -495,6 +525,7 @@ export class ConfigurationComponent implements OnInit {
         icd10Code: m.icd10Code,
         name: m.name,
       })),
+      outputFormat: backendConfig.outputFormat || 'CCDA',
       year: backendConfig.year || new Date().getUTCFullYear(),
       selectedConditions: [],
     };

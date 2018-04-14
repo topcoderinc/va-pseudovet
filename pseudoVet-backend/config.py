@@ -21,6 +21,12 @@ PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 # the randomizer templates directory
 TEMPLATES_DIR = PROJECT_DIR + '/randomizer/templates'
 
+# the randomizer CCDA format template file name
+CCDA_TPL_FILENAME = 'continuity_of_care_document.xml'
+
+# the randomizer FHIR format template file name
+FHIR_TPL_FILENAME = 'fhir/fhir_document.json'
+
 # the datasources directory
 DATASOURCES_DIR = PROJECT_DIR + '/randomizer/datasources'
 

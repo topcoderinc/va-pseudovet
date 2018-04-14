@@ -158,6 +158,9 @@ paths:
               completedOn:
                 type: string
                 description: the dataset completed time
+              outputFormat:
+                type: string
+                description: the dataset output format
               configuration:
                 $ref: '#/definitions/DatasetConfiguration'
         '400':
@@ -318,6 +321,9 @@ definitions:
       outputFolder:
         type: string
         description: The output folder.
+      outputFormat:
+        type: string
+        description: the output format, must be `CCDA`,`FHIR-XML`,`FHIR-JSON`
       year:
         type: integer
         description: The report end year.

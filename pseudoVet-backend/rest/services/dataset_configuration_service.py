@@ -60,6 +60,7 @@ dataset_configuration_schema = {
     'morbiditiesData': {'type': 'list', 'minlength': 1, 'required': True},
     'relatedConditionsData': {'type': 'list', 'required': False},
     'outputFolder': {'type': 'string'},
+    'outputFormat': {'type': 'string', 'required': True, 'allowed': ['CCDA', 'FHIR-XML', 'FHIR-JSON', ]},
     'year': {'type': 'integer', 'required': True},
 }
 
@@ -88,6 +89,7 @@ def validate_document(document):
                 if not cerberus_validator.validate(item, relatedConditions_schema):
                     raise BadRequestError("Request validation failed for relatedConditionsData. Info: " +
                                           str(cerberus_validator.errors))
+
 
 # register custom validator to validate "morbiditiesData" items
 custom_validators.append(validate_document)
@@ -196,6 +198,7 @@ def get_configuration_by_title(title):
         return read_configuration_from_file(configuration_file_path)
     else:
         raise EntityNotFoundError('Cannot find configuration file for title ' + title)
+
 
 @service(schema={'title': {'type': 'string', 'required': True}})
 def delete_config_by_title(title):

@@ -11,6 +11,13 @@ from datetime import timedelta
 from random import randint
 
 
+def lower_case(v):
+    # convert to lower case
+    if not v:
+        return ''
+    return v.lower()
+
+
 def datetime_format(value, new_format='%Y%m%d%H%M'):
     return value.strftime(new_format)
 

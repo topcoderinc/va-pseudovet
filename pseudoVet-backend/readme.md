@@ -33,34 +33,36 @@
 
 These are some configuration values that can be found in config.py
 
-| configuration parameter name             | description                              | environment key | default value                            |
-| ---------------------------------------- | ---------------------------------------- | --------------- | ---------------------------------------- |
-| APPLICATION_ROOT                         | the rest backend endpoint route prefix   |                 | /api/v1                                  |
-| LOG_LEVEL                                | the backend log level                    |                 | DEBUG                                    |
-| LOG_FORMAT                               | the app log message format               |                 | %(asctime)s %(levelname)s : %(message)s  |
-| FLASK_RUN_MODE                           | the Flask run mode, DEBUG or PROD        | MODE            | PROD                                     |
-| WEB_PORT                                 | the Flask run web port                   | PORT            | 5000                                     |
-| TEMPLATES_DIR                            | the Jinja2 templates directory           |                 | ./randomizer/templates                   |
-| DATASOURCES_DIR                          | the path of datasource directory         |                 | ./randomizer/datasources                 |
-| ICD_10_CODES_FILE_PATH                   | the file with ICD-10 codes and names     |                 | ./randomizer/datasources/ICD-10/icd10cm_codes_2018.txt |
-| DATASET_CONFIGURATIONS_DIR               | the path of dataset config files dir     |                 | ./output/datasetConfigurations           |
-| GENERATED_DATASETS_DIR                   | the generated datasets file dir path     |                 | ./output/generatedDatasets               |
-| CONFIGURATION_PREFIX                     | the datasource config file name prefix   |                 | DatasetConfiguration                     |
-| DEFAULT_WAR_ERA_CODE                     | the code of war era to be used by default |                 | world_war_ii                             |
-| MIN_PATIENT_AGE_ON_WAR_START             | the minimum age of generated patients on war start |                 | 18                                       |
-| MAX_PATIENT_AGE_ON_WAR_START             | the maximum age of generated patients on war start |                 | 40                                       |
-| DEATH_AGE_MEAN                           | the average death age of the generated patients |                 | 79                                       |
-| DEATH_AGE_DEVIATION                      | the deviation of death age of the generated patients |                 | 15                                       |
-| MIN_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the min days from war start till 1st patient's report |                 | 100                                      |
-| MAX_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the max days from war start till 1st patient's report |                 | 20 * 365                                 |
-| MIN_DAYS_BETWEEN_FIRST_REPORT_AND_MAX_DATE | the min days between first report and death/end date |                 | 5 * 365                                  |
-| MIN_DAYS_BETWEEN_REPORTS                 | the min days between reports for the same patient |                 | 3 * 365                                  |
-| MAX_DAYS_BETWEEN_REPORTS                 | the max days between reports for the same patient |                 | 10 * 365                                 |
-| MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE | the max days between patient's birth and diagnosis date |                 | 80 * 365                                 |
-| MIN_DAYS_TILL_MORBIDITY_RESOLUTION       | the min days between morbidity diagnosis and resolution |                 | 30                                       |
-| MAX_DAYS_TILL_MORBIDITY_RESOLUTION       | the max days between morbidity diagnosis and resolution |                 | 100                                      |
-| DATASET_PREFIX                           | the dataset folder prefix                |                 |                                          |
-| FRONTEND_DIR                             | the frontend dist directory              |                 | ./frontend/dist                          |
+| configuration parameter name               | description                                             | environment key | default value                                          |
+| ------------------------------------------ | ------------------------------------------------------- | --------------- | ------------------------------------------------------ |
+| APPLICATION_ROOT                           | the rest backend endpoint route prefix                  |                 | /api/v1                                                |
+| LOG_LEVEL                                  | the backend log level                                   |                 | DEBUG                                                  |
+| LOG_FORMAT                                 | the app log message format                              |                 | %(asctime)s %(levelname)s : %(message)s                |
+| FLASK_RUN_MODE                             | the Flask run mode, DEBUG or PROD                       | MODE            | PROD                                                   |
+| WEB_PORT                                   | the Flask run web port                                  | PORT            | 5000                                                   |
+| TEMPLATES_DIR                              | the Jinja2 templates directory                          |                 | ./randomizer/templates                                 |
+| CCDA_TPL_FILENAME                          | the CCDA template file                                  |                 | continuity_of_care_document.xml                        |
+| FHIR_TPL_FILENAME                          | the FHIR template file                                  |                 | fhir/fhir_document.json                                |
+| DATASOURCES_DIR                            | the path of datasource directory                        |                 | ./randomizer/datasources                               |
+| ICD_10_CODES_FILE_PATH                     | the file with ICD-10 codes and names                    |                 | ./randomizer/datasources/ICD-10/icd10cm_codes_2018.txt |
+| DATASET_CONFIGURATIONS_DIR                 | the path of dataset config files dir                    |                 | ./output/datasetConfigurations                         |
+| GENERATED_DATASETS_DIR                     | the generated datasets file dir path                    |                 | ./output/generatedDatasets                             |
+| CONFIGURATION_PREFIX                       | the datasource config file name prefix                  |                 | DatasetConfiguration                                   |
+| DEFAULT_WAR_ERA_CODE                       | the code of war era to be used by default               |                 | world_war_ii                                           |
+| MIN_PATIENT_AGE_ON_WAR_START               | the minimum age of generated patients on war start      |                 | 18                                                     |
+| MAX_PATIENT_AGE_ON_WAR_START               | the maximum age of generated patients on war start      |                 | 40                                                     |
+| DEATH_AGE_MEAN                             | the average death age of the generated patients         |                 | 79                                                     |
+| DEATH_AGE_DEVIATION                        | the deviation of death age of the generated patients    |                 | 15                                                     |
+| MIN_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the min days from war start till 1st patient's report   |                 | 100                                                    |
+| MAX_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the max days from war start till 1st patient's report   |                 | 20 * 365                                               |
+| MIN_DAYS_BETWEEN_FIRST_REPORT_AND_MAX_DATE | the min days between first report and death/end date    |                 | 5 * 365                                                |
+| MIN_DAYS_BETWEEN_REPORTS                   | the min days between reports for the same patient       |                 | 3 * 365                                                |
+| MAX_DAYS_BETWEEN_REPORTS                   | the max days between reports for the same patient       |                 | 10 * 365                                               |
+| MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE  | the max days between patient's birth and diagnosis date |                 | 80 * 365                                               |
+| MIN_DAYS_TILL_MORBIDITY_RESOLUTION         | the min days between morbidity diagnosis and resolution |                 | 30                                                     |
+| MAX_DAYS_TILL_MORBIDITY_RESOLUTION         | the max days between morbidity diagnosis and resolution |                 | 100                                                    |
+| DATASET_PREFIX                             | the dataset folder prefix                               |                 |                                                        |
+| FRONTEND_DIR                               | the frontend dist directory                             |                 | ./frontend/dist                                        |
 
 ## Dataset configuration files
 
@@ -125,6 +127,8 @@ The recent version of tha applications support generation of reports based on JS
     // The start date of the war era. Optional.
     "warEraStartDate": "Sun, 07 Dec 1941 00:00:00 GMT"
   },
+  // the output format, CCDA,FHIR-XML,or FHIR-JSON
+  "outputFormat":"CCDA",
   // The year to be used as maximum possible year of report effective dates.
   // It indicates how long aging of patiend records should be performed.
   // Optional. Default is current year.
@@ -146,6 +150,20 @@ The recent version of tha applications support generation of reports based on JS
 - run `python3 pseudo_vets_server.py ` start server, then use browser open http://127.0.0.1:5000
 
 
+### FHIR format verification
+
+FHIR format verification need java runtime, make sure **you installed jdk 1.8+.**
+
+- ` wget http://hl7.org/fhir/validator.zip` download validator, and unzip it.
+- ` wget http://hl7.org/fhir/definitions.xml.zip`, download FHIR-XML definitions, **don't unzip this.**
+- ` wget http://hl7.org/fhir/definitions.json.zip`,download FHIR-JSON definitions, **don't unzip this.**
+
+  make sure org.hl7.fhir.validator.jar and definitions.*.zip **are in same folder**, then go to this folder.
+
+  - for FHIR format, run `java -jar org.hl7.fhir.validator.jar demo.xml -defn definitions.xml.zip`, use your xml full path replace *demo.xml* .
+  - for FHIR json format,  run `java -jar org.hl7.fhir.validator.jar demo.json -defn definitions.json.zip`, use your json full path replace *demo.json*. 
+
+other way, for FHIR json format, you can open http://docs.smarthealthit.org/fred/?profiles=.%2Fprofiles%2Fstu3.json , click "Open Resource", then copy you FHIR-JSON file content, paste into it.
 
 ## Notes
 
@@ -156,6 +174,8 @@ The recent version of tha applications support generation of reports based on JS
 - for frontend, add package ngx-toastr to toastr messages, and add @ngx-progressbar/core,@ngx-progressbar/http to progress bar on page top when http requesting.
 
 ## Video
+
+**FHIR format Challenge video: **<https://youtu.be/Rme-ipwdCvM> 
 
 Latest Challenge video:<https://youtu.be/rqsSgWlUv40>
 
