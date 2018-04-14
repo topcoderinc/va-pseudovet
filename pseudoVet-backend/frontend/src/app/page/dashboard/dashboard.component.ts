@@ -13,8 +13,8 @@ import { saveAs } from 'file-saver/FileSaver';
 })
 export class DashboardComponent implements OnInit {
   dashboardData: any = {};
-  datasets: any = [];
-  configurations: any = [];
+  datasets: any = null;
+  configurations: any = null;
   inProgressDatasets: any = [];
   deleteInProgress = false;
   deleteInProgressObj: any = {};
@@ -41,6 +41,16 @@ export class DashboardComponent implements OnInit {
     this.fetchDatasets();
   }
 
+  /**
+   * get PatientsAndRadio label for table row
+   * @param item the configuration item
+   * @return {string} the label
+   */
+  getPatientsAndRadioLabel(item) {
+    return `${item.numberOfPatients.toLocaleString()} / ${(item.maleRatio
+      || (item.femaleRatio ? 100 - item.femaleRatio : 0))}:${(item.femaleRatio
+      || (item.maleRatio ? 100 - item.maleRatio : 0))}`;
+  }
   /**
    * fetch configurations
    */

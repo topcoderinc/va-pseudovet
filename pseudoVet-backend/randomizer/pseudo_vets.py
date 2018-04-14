@@ -38,20 +38,24 @@ renderer = Renderer()
 DAYS_IN_YEAR = 365.2425
 
 
-def setup_work_session(output_dir, create_session_path=True, config_title=None):
+def setup_work_session(output_dir, create_session_path=True, config_title=None, output_format='CCDA'):
     """
     Create a unique work folder for the current session
     :param output_dir: the output directory for generated dataset files
     :param create_session_path: True if session directory should be created, False otherwise
     :param config_title: the config title used
+    :param output_format: the output format
     :return: None
     """
     global work_dir
     global session_id
 
     # generate new session ID from the current timestamp
-    session_id = config_title and '{0}.{1}.{2}'.format(DATASET_PREFIX,
-                                                   config_title, datetime.datetime.now().strftime("%Y%m%d%H%M%S")) or datetime.datetime.now().isoformat().replace(':', '')
+    session_id = config_title and '{0}.{1}.{2}.{3}'.format(
+        DATASET_PREFIX,
+        config_title,
+        datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+        output_format) or datetime.datetime.now().isoformat().replace(':', '')
     work_dir = output_dir
 
     # load data sources if they haven't been loaded previously
@@ -348,10 +352,11 @@ def age_patient(patient, end_year):
     return True
 
 
-def create_file(record):
+def create_file(record, output_format):
     """
     Create an XML output file for the given patient
     :param record: the patient record to be saved to a file
+    :param output_format: the output format
     :return: None
     """
     global renderer
@@ -360,9 +365,12 @@ def create_file(record):
 
     index = record['index']
     age = record['total_age']
-    result = renderer.render(record)
-    filename = "{work_dir}/{session_id}/{session_id}-{index}_{age}.xml".format(
-        work_dir=work_dir, session_id=session_id, index=index, age=age)
+    result = renderer.render(record, output_format)
+    file_extension = 'xml'
+    if output_format in ['FHIR-JSON', ]:
+        file_extension = 'json'
+    filename = "{work_dir}/{session_id}/{session_id}-{index}_{age}.{extension}".format(
+        work_dir=work_dir, session_id=session_id, index=index, age=age, extension=file_extension)
 
     with io.open(filename, 'w', encoding='utf-8') as f:
         f.write(result)
@@ -454,7 +462,7 @@ def apply_morbidity(patients, morbidity_data):
         })
 
 
-def generate_records(war_era, patients_num, male_perc, morbidities_data, end_year):
+def generate_records(war_era, patients_num, male_perc, morbidities_data, end_year, output_format):
     """
     Generates dataset record files using the specified parameters.
     :param war_era: the war era data dictionary (just name of code can be specified)
@@ -462,6 +470,7 @@ def generate_records(war_era, patients_num, male_perc, morbidities_data, end_yea
     :param male_perc: the male percentage of patients (between 0 and 100)
     :param morbidities_data: the list with morbidities details
     :param end_year: the end year for generated reports
+    :param output_format: the output format
     :return: the total number of created report files
     """
     logger.info('Creating {0} fictional patient{1}...'.format(patients_num, "s" if patients_num > 1 else ""))
@@ -484,7 +493,7 @@ def generate_records(war_era, patients_num, male_perc, morbidities_data, end_yea
         populate_current_problems(patient)
 
         # save initial report for the current patient
-        create_file(patient)
+        create_file(patient, output_format)
         patient_files_num = 1
         initial_problems_num = len(patient['icd_problems'])
 
@@ -492,7 +501,7 @@ def generate_records(war_era, patients_num, male_perc, morbidities_data, end_yea
         while patient['date_of_death'] is None:
             if not age_patient(patient, end_year):
                 break
-            create_file(patient)
+            create_file(patient, output_format)
             patient_files_num += 1
 
         final_problems_num = len(patient['icd_problems'])
@@ -541,6 +550,8 @@ def generate_from_config(dataset_config):
     :param dataset_config: the dataset configuration dictionary
     :return: None
     """
+
+    output_format = dataset_config.get('outputFormat', 'CCDA')
     if 'warEra' not in dataset_config:
         raise ValueError('War era is missing in the dataset configuration')
     war_era = dataset_config['warEra']
@@ -579,7 +590,7 @@ def generate_from_config(dataset_config):
     cur_work_dir = GENERATED_DATASETS_DIR
     if 'outputFolder' in dataset_config:
         cur_work_dir = dataset_config['outputFolder']
-    setup_work_session(cur_work_dir, True, dataset_config['title'])
+    setup_work_session(cur_work_dir, True, dataset_config['title'], output_format)
 
     # retrieve morbidities from configuration or data source
     morbidities_data = None
@@ -596,4 +607,4 @@ def generate_from_config(dataset_config):
     if ('relatedConditionsData' in dataset_config) and (len(dataset_config['relatedConditionsData']) > 0):
         morbidities_data.extend(dataset_config['relatedConditionsData'])
 
-    return generate_records(full_war_era, patients_num, male_ratio, morbidities_data, end_year)
+    return generate_records(full_war_era, patients_num, male_ratio, morbidities_data, end_year, output_format)
