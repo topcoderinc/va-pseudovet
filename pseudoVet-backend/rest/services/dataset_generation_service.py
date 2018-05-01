@@ -57,7 +57,9 @@ def get_all_datasets():
     for dataset_name in datasets_folders:
         if not dataset_name.startswith(DATASET_PREFIX):  # not generate by rest api
             continue
-        name = dataset_name.split('.')[1]
+        dataset_parts = dataset_name.split('.')
+        name = len(dataset_parts) > 1 and dataset_parts[1] or 'ERROR TO GET NAME'
+        output_format = len(dataset_parts) > 3 and dataset_parts[3] or 'CCDA'
         try:
             configurations = dataset_configuration_service.get_configuration_by_title(name)
             datasets.append({
@@ -65,6 +67,7 @@ def get_all_datasets():
                 'completedOn': datetime.fromtimestamp(
                     stat(join(GENERATED_DATASETS_DIR, dataset_name)).st_mtime).isoformat(),
                 'configuration': configurations,
+                'outputFormat': output_format,
                 'datasetName': dataset_name
             })
         except Exception as e:

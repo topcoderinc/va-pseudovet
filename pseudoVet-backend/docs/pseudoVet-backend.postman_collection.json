@@ -1,9 +1,8 @@
 {
 	"info": {
+		"_postman_id": "8198bf68-6347-4a44-be4d-1e04bcd9c30a",
 		"name": "pseudoVet-backend",
-		"_postman_id": "a1d59ece-5250-4792-a2d1-47011a0fcdbd",
-		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
@@ -24,16 +23,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War III\"\n\t},\n\t\"maleRatio\":20,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n\t\t\t\"percentOfPopulationWithDiagnosisRisk\": 50,\n    \t\t\"percentOfProbabilityToAcquireDiagnosis\": 50,\n\t\t\t\"icd10Code\":\"I25\",\n\t\t\t\"name\":\"Chronic ischemic heart disease\"\n\t\t}\n\t]\n}"
 						},
-						"url": {
-							"raw": "{{URL}}/datasetConfigurations",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"datasetConfigurations"
-							]
-						},
-						"description": null
+						"url": "{{URL}}/datasetConfigurations"
 					},
 					"response": []
 				},
@@ -51,16 +41,7 @@
 							"mode": "raw",
 							"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War II\"\n\t},\n\t\"femaleRatio\":30,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n    \t\t\"numberOfEncounters\": 3,\n\t\t\t\"icd10Code\":\"ZSDS\",\n\t\t\t\"name\":\"Unknown disease\"\n\t\t}\n\t]\n}"
 						},
-						"url": {
-							"raw": "{{URL}}/datasetConfigurations",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"datasetConfigurations"
-							]
-						},
-						"description": null
+						"url": "{{URL}}/datasetConfigurations"
 					},
 					"response": []
 				},
@@ -78,16 +59,7 @@
 							"mode": "raw",
 							"raw": "{\r\n  \"title\": \"config-01\",\r\n  \"maleRatio\": 60,\r\n  \"morbiditiesData\": [\r\n    {\r\n      \"exclusionRules\": \"gender == 'Female' or (gender == 'Male' and total_age <= 20)\",\r\n      \"name\": \"Chronic ischemic heart disease\",\r\n      \"numberOfEncounters\": 2\r\n    },\r\n    {\r\n      \"exclusionRules\": \"gender == 'Male'\",\r\n      \"icd10Code\": \"F33\",\r\n      \"name\": \"Major depressive disorder, recurrent\",\r\n      \"percentOfPopulationWithDiagnosisRisk\": 90,\r\n      \"percentOfProbabilityToAcquireDiagnosis\": 90\r\n    },\r\n    {\r\n      \"icd10Code\": \"Z60.2\",\r\n      \"name\": \"Problems related to living alone\",\r\n      \"numberOfEncounters\": 10\r\n    }\r\n  ],\r\n  \"numberOfPatients\": 10,\r\n  \"outputFolder\": \"./output/generatedDatasets\",\r\n  \"warEra\": {\r\n    \"warEra\": \"World War II\",\r\n    \"warEraCode\": \"world_war_ii\",\r\n    \"warEraEndDate\": \"Tue, 31 Dec 1946 00:00:00 GMT\",\r\n    \"warEraStartDate\": \"Sun, 07 Dec 1941 00:00:00 GMT\"\r\n  },\r\n  \"year\": 1980\r\n}"
 						},
-						"url": {
-							"raw": "{{URL}}/datasetConfigurations",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"datasetConfigurations"
-							]
-						},
-						"description": null
+						"url": "{{URL}}/datasetConfigurations"
 					},
 					"response": []
 				},
@@ -116,12 +88,10 @@
 							"query": [
 								{
 									"key": "title",
-									"value": "config-sdsdsd",
-									"equals": true
+									"value": "config-sdsdsd"
 								}
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				},
@@ -145,12 +115,10 @@
 							"query": [
 								{
 									"key": "title",
-									"value": "config-01asdsd",
-									"equals": true
+									"value": "config-01asdsd"
 								}
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				},
@@ -174,12 +142,10 @@
 							"query": [
 								{
 									"key": "warEra",
-									"value": "World War III",
-									"equals": true
+									"value": "World War III"
 								}
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				},
@@ -192,16 +158,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "{{URL}}/morbidities",
-							"host": [
-								"{{URL}}"
-							],
-							"path": [
-								"morbidities"
-							]
-						},
-						"description": null
+						"url": "{{URL}}/morbidities"
 					},
 					"response": []
 				},
@@ -225,12 +182,10 @@
 							"query": [
 								{
 									"key": "title",
-									"value": "config-02",
-									"equals": true
+									"value": "config-02"
 								}
 							]
-						},
-						"description": null
+						}
 					},
 					"response": []
 				}
@@ -248,18 +203,9 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"title\": \"config-01\",\r\n  \"maleRatio\": 60,\r\n  \"morbiditiesData\": [\r\n    {\r\n      \"exclusionRules\": \"gender == 'Female' or (gender == 'Male' and total_age <= 20)\",\r\n      \"icd10Code\": \"I25\",\r\n      \"numberOfEncounters\": 2\r\n    },\r\n    {\r\n      \"exclusionRules\": \"gender == 'Male'\",\r\n      \"icd10Code\": \"F33\",\r\n      \"percentOfPopulationWithDiagnosisRisk\": 90,\r\n      \"percentOfProbabilityToAcquireDiagnosis\": 90\r\n    },\r\n    {\r\n      \"icd10Code\": \"Z60.2\",\r\n      \"numberOfEncounters\": 10\r\n    }\r\n  ],\r\n  \"numberOfPatients\": 10,\r\n  \"outputFolder\": \"./output/generatedDatasets\",\r\n  \"warEra\": {\r\n    \"warEra\": \"World War II\",\r\n    \"warEraCode\": \"world_war_ii\",\r\n    \"warEraEndDate\": \"Tue, 31 Dec 1946 00:00:00 GMT\",\r\n    \"warEraStartDate\": \"Sun, 07 Dec 1941 00:00:00 GMT\"\r\n  },\r\n  \"year\": 1980\r\n}"
+					"raw": "{\r\n  \"title\": \"config-01\",\r\n  \"maleRatio\": 10,\r\n  \"morbiditiesData\": [\r\n    {\r\n      \"exclusionRules\": \"gender == 'Female' or (gender == 'Male' and total_age <= 20)\",\r\n      \"icd10Code\": \"I25\",\r\n      \"numberOfEncounters\": 2\r\n    },\r\n    {\r\n      \"exclusionRules\": \"gender == 'Male'\",\r\n      \"icd10Code\": \"F33\",\r\n      \"percentOfPopulationWithDiagnosisRisk\": 90,\r\n      \"percentOfProbabilityToAcquireDiagnosis\": 90\r\n    },\r\n    {\r\n      \"icd10Code\": \"Z60.2\",\r\n      \"numberOfEncounters\": 10\r\n    }\r\n  ],\r\n  \"numberOfPatients\": 10,\r\n  \"outputFolder\": \"./output/generatedDatasets\",\r\n  \"warEra\": {\r\n    \"warEra\": \"World War II\",\r\n    \"warEraCode\": \"world_war_ii\",\r\n    \"warEraEndDate\": \"Tue, 31 Dec 1946 00:00:00 GMT\",\r\n    \"warEraStartDate\": \"Sun, 07 Dec 1941 00:00:00 GMT\"\r\n  },\r\n  \"outputFormat\":\"FHIR-JSON\",\r\n  \"year\": 1980\r\n}"
 				},
-				"url": {
-					"raw": "{{URL}}/datasetConfigurations",
-					"host": [
-						"{{URL}}"
-					],
-					"path": [
-						"datasetConfigurations"
-					]
-				},
-				"description": null
+				"url": "{{URL}}/datasetConfigurations"
 			},
 			"response": []
 		},
@@ -277,16 +223,7 @@
 					"mode": "raw",
 					"raw": "{\r\n  \"title\": \"config-02\",\r\n  \"maleRatio\": 60,\r\n  \"morbiditiesData\": [\r\n    {\r\n      \"icd10Code\": \"L400\",\r\n      \"numberOfEncounters\": 2\r\n    }\r\n  ],\r\n  \"numberOfPatients\": 10,\r\n  \"outputFolder\": \"./output/generatedDatasets\",\r\n  \"warEra\": {\r\n    \"warEra\": \"World War II\",\r\n    \"warEraCode\": \"world_war_ii\",\r\n    \"warEraEndDate\": \"Tue, 31 Dec 1946 00:00:00 GMT\",\r\n    \"warEraStartDate\": \"Sun, 07 Dec 1941 00:00:00 GMT\"\r\n  },\r\n  \"year\": 1980\r\n}"
 				},
-				"url": {
-					"raw": "{{URL}}/datasetConfigurations",
-					"host": [
-						"{{URL}}"
-					],
-					"path": [
-						"datasetConfigurations"
-					]
-				},
-				"description": null
+				"url": "{{URL}}/datasetConfigurations"
 			},
 			"response": []
 		},
@@ -315,12 +252,10 @@
 					"query": [
 						{
 							"key": "title",
-							"value": "config-01",
-							"equals": true
+							"value": "config-01"
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -338,16 +273,7 @@
 					"mode": "raw",
 					"raw": "{\n\t\"title\":\"config-01\",\n\t\"warEra\":{\n\t\t\"warEra\":\"World War II\"\n\t},\n\t\"femaleRatio\":30.1,\n\t\"maleRatio\":20.1,\n\t\"numberOfPatients\":13,\n\t\"year\":1993,\n\t\"morbiditiesData\":[\n\t\t{\n\t\t\t\"percentOfPopulationWithDiagnosis\": 0,\n    \t\t\"percentOfProbabilityToAcquireDiagnosis\": 0,\n    \t\t\"numberOfEncounters\": 0,\n    \t\t\"exclusionRules\": \"gender == 'male' || (gender == 'female' && age <= 20)\",\n\t\t\t\"icd10Code\":\"I25\"\n\t\t}\n\t]\n}"
 				},
-				"url": {
-					"raw": "{{URL}}/datasetConfigurations",
-					"host": [
-						"{{URL}}"
-					],
-					"path": [
-						"datasetConfigurations"
-					]
-				},
-				"description": null
+				"url": "{{URL}}/datasetConfigurations"
 			},
 			"response": []
 		},
@@ -371,16 +297,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "{{URL}}/datasetConfigurationFromFile",
-					"host": [
-						"{{URL}}"
-					],
-					"path": [
-						"datasetConfigurationFromFile"
-					]
-				},
-				"description": null
+				"url": "{{URL}}/datasetConfigurationFromFile"
 			},
 			"response": []
 		},
@@ -404,12 +321,10 @@
 					"query": [
 						{
 							"key": "title",
-							"value": "config-01",
-							"equals": true
+							"value": "config-01"
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -422,16 +337,7 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "{{URL}}/warEras",
-					"host": [
-						"{{URL}}"
-					],
-					"path": [
-						"warEras"
-					]
-				},
-				"description": null
+				"url": "{{URL}}/warEras"
 			},
 			"response": []
 		},
@@ -455,12 +361,10 @@
 					"query": [
 						{
 							"key": "warEra",
-							"value": "World War II",
-							"equals": true
+							"value": "World War II"
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -473,16 +377,7 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "{{URL}}/datasets",
-					"host": [
-						"{{URL}}"
-					],
-					"path": [
-						"datasets"
-					]
-				},
-				"description": null
+				"url": "{{URL}}/datasets"
 			},
 			"response": []
 		},
@@ -506,12 +401,10 @@
 					"query": [
 						{
 							"key": "title",
-							"value": "",
-							"equals": true
+							"value": ""
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		},
@@ -535,12 +428,10 @@
 					"query": [
 						{
 							"key": "title",
-							"value": "config-02",
-							"equals": true
+							"value": "config-02"
 						}
 					]
-				},
-				"description": null
+				}
 			},
 			"response": []
 		}

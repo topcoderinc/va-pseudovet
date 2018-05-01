@@ -330,9 +330,10 @@
 
         <label class="label-element">OUTPUT FORMAT</label>
         <select
-          [value]="'CCDA'"
-          (change)="$event.target.value"
+          [value]="configurationData.outputFormat"
+          (change)="configurationData.outputFormat=$event.target.value"
           class="form-element">
+          <option value=""></option>
           <option value="CCDA">CCDA</option>
           <option value="FHIR-XML">FHIR-XML</option>
           <option value="FHIR-JSON">FHIR-JSON</option>
