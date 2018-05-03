@@ -117,14 +117,14 @@
           <div class="sec-1">
             <label class="label-element">No. of Patients</label>
             <input appNumber [(ngModel)]= "configurationData.patients"
-                   type="text" minVal="1" class="form-element no-of-patients"/>
+                   type="text" blank="true" class="form-element no-of-patients"/>
           </div>
           <div class="sec-2">
             <label class="label-element">Patient gender Ratio (m / f)</label>
-            <input appNumber roundOff="false" [ngModel]= "configurationData.male"
+            <input appNumber roundOff="false" mustFormat="false" [ngModel]= "configurationData.male"
                    (ngModelChange)="onRadioChange($event, 'male')"
                    type="text" class="form-element ratio"/>
-            <input appNumber roundOff="false" [ngModel]= "configurationData.female"
+            <input appNumber roundOff="false" mustFormat="false" [ngModel]= "configurationData.female"
                    (ngModelChange)="onRadioChange($event, 'female')"
                    type="text" class="form-element ratio"/>
           </div>
@@ -255,7 +255,7 @@
       </div>
     </div>
     <div [ngClass]="{'active': selectedTab === 3, 'done': selectedTab > 3, 'completed': !create && !dashboard}" class="accordion">
-      <div class="accordion-header" (click)="selectedTab = (!create && !dashboard) ? 3 : selectedTab">
+      <div class="accordion-header" (click)="selectedTab = (selectedTab > 3 || (!create && !dashboard)) ? 3 : selectedTab">
         <i class="expand"></i>
         <i class="done" [ngClass]="{'show': selectedTab > 3}"></i>
         <span [ngClass]="{'hide': selectedTab > 3}">3.</span>
@@ -279,7 +279,7 @@
           </tr>
           <tr *ngFor="let item of configurationData.conditions; let $i=index">
             <td>
-              <a (click)="deleteItems(item.name, 'conditions')" class="remove-icon"></a>
+              <a (click)="deleteItems(item.icd10Code, item.name, 'conditions')" class="remove-icon"></a>
               {{$i + 1}}
             </td>
             <td>{{item.icd10Code + '-' + item.name}}</td>
