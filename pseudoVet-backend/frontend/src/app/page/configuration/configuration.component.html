@@ -121,10 +121,10 @@
           </div>
           <div class="sec-2">
             <label class="label-element">Patient gender Ratio (m / f)</label>
-            <input appNumber roundOff="false" mustFormat="false" [ngModel]= "configurationData.male"
+            <input appNumber blank="true" roundOff="false" mustFormat="false" [ngModel]= "configurationData.male"
                    (ngModelChange)="onRadioChange($event, 'male')"
                    type="text" class="form-element ratio"/>
-            <input appNumber roundOff="false" mustFormat="false" [ngModel]= "configurationData.female"
+            <input appNumber blank="true" roundOff="false" mustFormat="false" [ngModel]= "configurationData.female"
                    (ngModelChange)="onRadioChange($event, 'female')"
                    type="text" class="form-element ratio"/>
           </div>
@@ -226,7 +226,7 @@
                      type="text" class="form-element percentage" maxlength="4"/>
             </td>
             <td>
-              <input appNumber [(ngModel)]="item.profiles"
+              <input appNumber [(ngModel)]="item.profiles" mustFormat="false"
                      type="text" class="form-element percentage"/>
             </td>
             <td>
@@ -292,7 +292,7 @@
                      type="text" class="form-element percentage" maxlength="4"/>
             </td>
             <td>
-              <input appNumber [(ngModel)]="item.profiles"
+              <input appNumber [(ngModel)]="item.profiles" mustFormat="false"
                      type="text" class="form-element percentage"/>
             </td>
             <td>

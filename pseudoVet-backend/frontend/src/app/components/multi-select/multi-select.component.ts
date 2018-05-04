@@ -80,7 +80,7 @@ export class MultiSelectComponent implements OnInit {
     if (this.findIndex(text) === -1) {
       this.copyOfSelectedOptions.push(text);
     } else {
-      this.copyOfSelectedOptions.splice(this.findIndex(text), 1);
+      this.removeItem(e, this.findIndex(text));
     }
     e.stopPropagation();
   }
@@ -95,11 +95,17 @@ export class MultiSelectComponent implements OnInit {
   }
 
   /**
+   * update select
+   */
+  doUpdate() {
+    this.selectedOptions = [...this.copyOfSelectedOptions];
+    this.add.emit(this.copyOfSelectedOptions);
+  }
+  /**
    * add selected Items
    */
   addSelected () {
-    this.selectedOptions = [...this.copyOfSelectedOptions];
-    this.add.emit(this.copyOfSelectedOptions);
+    this.doUpdate();
     this.open = false;
   }
 }
