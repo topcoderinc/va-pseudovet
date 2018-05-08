@@ -101,6 +101,7 @@
         <tr>
           <th>#</th>
           <th>CONFIGURATION TITLE</th>
+          <th class="format">OUTPUT FORMAT</th>
           <th colspan="2" class="with-button">GENERAL DEMOGRAPHICS
             <small>(War Era / Patients / Gender ratio)</small>
           </th>
@@ -110,6 +111,7 @@
             <a (click)="removeConfigItem($i)" href="javascript:;" class="remove-icon"></a>
             <span class="number">{{$i + 1}}</span></td>
           <td>{{item.title}}</td>
+          <td>{{item.outputFormat}}</td>
           <td>{{item.warEra.warEra + ' / ' + getPatientsAndRadioLabel(item)}}
           </td>
           <td class="action-button">
@@ -136,7 +138,9 @@
         <tr>
           <th>#</th>
           <th>DATATSET TITLE</th>
-          <th>OUTPUT FORMAT</th>
+          <th class="format">OUTPUT FORMAT</th>
+          <th class="status">STATUS</th>
+          <th class="progress">PROGRESS</th>
           <th class="completed-td">COMPLETED ON</th>
           <th colspan="2" class="with-button generated-table">GENERAL DEMOGRAPHICS
             <small>(War Era / Patients / Gender ratio)</small>
@@ -149,11 +153,13 @@
           </td>
           <td>{{dataset.title}}</td>
           <td>{{dataset.outputFormat}}</td>
-          <td>{{dataset.completedOn | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+          <td>{{dataset.status}}</td>
+          <td>{{getProgressValue(dataset.progress)}}%</td>
+          <td>{{dataset.completedOn === 'N/A' ? 'N/A': (dataset.completedOn | date:'yyyy-MM-dd HH:mm:ss')}}</td>
           <td>{{dataset.configuration.warEra.warEra + ' / '
             + getPatientsAndRadioLabel(dataset.configuration)}}
           </td>
-          <td class="action-button">
+          <td class="action-button generated-table">
             <button (click)="reGeneratedItem($i)" class="small-button large">Regenerate</button>
             <button (click)="onDatsetEditConfigClick($i)" class="small-button large">Edit Config</button>
           </td>

@@ -432,8 +432,8 @@ export class ConfigurationComponent implements OnInit {
    */
   startGenerateDataset () {
     this.ngProgress.start();
-    this.dataService.generateDatasets(this.configurationData.title).then(res => {
-      this.toastr.success('Dataset generate succeed');
+    this.dataService.generateDatasets(this.configurationData.title.trim()).then(res => {
+      this.toastr.success('Dataset generate started.');
       this.ngProgress.completed();
     }).catch(err => {
       console.error(err);
