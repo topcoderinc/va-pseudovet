@@ -518,7 +518,7 @@ export class ConfigurationComponent implements OnInit {
         acquires: (m.percentOfProbabilityToAcquireDiagnosis || 0) + '%',
         profiles: m.numberOfEncounters || 0,
       })) : [],
-      war: backendConfig.studyProfile.studyProfile,
+      studyProfile: backendConfig.studyProfile.studyProfile,
       studyProfileStart: this.getDMYByTimeString(backendConfig.studyProfile.studyProfileStartDate),
       studyProfileEnd: this.getDMYByTimeString(backendConfig.studyProfile.studyProfileEndDate),
       selectedConfigurations: backendConfig.morbiditiesData.map(m => ({
