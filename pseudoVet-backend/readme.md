@@ -67,7 +67,7 @@ These are some configuration values that can be found in config.py
 ## Dataset configuration files
 
 The recent version of tha applications support generation of reports based on JSON dataset configuration files that have the following format (note that comments are not allowed in real JSON files, all parameters are shown for clarity only, some of them conflict with each other and cannot appear at the same time):
-```json
+```js
 {
    // The title of the dataset configuraton. Is required when saving/retrieving configs via REST API.
    // Must not contain any characters that cannot be part of a valid file name.
@@ -128,7 +128,7 @@ The recent version of tha applications support generation of reports based on JS
     "studyProfileEraStartDate": "Sun, 07 Dec 1941 00:00:00 GMT"
   },
   // the output format, CCDA,FHIR-XML,or FHIR-JSON
-  "outputFormat":"CCDA",
+  "outputFormat": "CCDA",
   // The year to be used as maximum possible year of report effective dates.
   // It indicates how long aging of patiend records should be performed.
   // Optional. Default is current year.
