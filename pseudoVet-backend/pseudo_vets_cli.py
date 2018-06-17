@@ -11,7 +11,7 @@ Options:
     -c path         Path to the dataset configuration file.
     -t title        Title of dataset configuration to be used.
       At maximum one of -c and -t switches is expected to be specified.
-    -w code         Code of war era for which records are created.
+    -s code         Code of study profile era for which records are created.
       E.g. world_war_ii, vietnam_war, korean_conflict or gulf_war.
       Can override value specified in dataset configuration file.
       Default is world_war_ii.
@@ -38,12 +38,12 @@ from os.path import isfile
 
 from rest.logger import logger
 from rest.errors import EntityNotFoundError
-from config import GENERATED_DATASETS_DIR, DEFAULT_WAR_ERA_CODE
+from config import GENERATED_DATASETS_DIR, DEFAULT_STUDY_PROFILE_ERA_CODE
 from randomizer.pseudo_vets import generate_from_config
 
 from rest.services.dataset_configuration_service import read_configuration_from_file
 from rest.services.dataset_configuration_service import get_configuration_by_title
-from rest.services.datasources_service import get_morbidities_from_war_code
+from rest.services.datasources_service import get_morbidities_from_study_profile_code
 
 if __name__ == '__main__':
     # parse command line options
@@ -111,13 +111,13 @@ if __name__ == '__main__':
             logger.error('End year is expected to be positive integer, but {0} is specified'.format(end_year))
             exit(1)
 
-    # process -w switch with war era code
-    war_code = options['-w']
-    if war_code:
-        config['warEra'] = {'warEraCode': war_code}
-    elif 'warEra' not in config:
+    # process -s switch with study profile era code
+    study_profile_code = options['-s']
+    if study_profile_code:
+        config['studyProfileEra'] = {'studyProfileEraCode': study_profile_code}
+    elif 'studyProfileEra' not in config:
         # use World War II by default
-        config['warEra'] = {'warEraCode': DEFAULT_WAR_ERA_CODE}
+        config['studyProfileEra'] = {'studyProfileEraCode': DEFAULT_STUDY_PROFILE_ERA_CODE}
 
     # process -o switch with output folder path
     if options['-o']:

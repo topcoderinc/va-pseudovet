@@ -237,7 +237,7 @@ paths:
     get:
       summary: Get morbidities.
       description: |
-        Get all morbidities for war era.
+        Get all morbidities for study profile era.
       tags:
         - DatasourcesData
       parameters:
@@ -245,7 +245,7 @@ paths:
           in: query
           type: string
           required: true
-          description: the war era
+          description: the study profile era
       responses:
         '200':
           description: The operation succeeded. The entities will be returned.
@@ -267,9 +267,9 @@ paths:
             $ref: '#/definitions/Error'
   /warEras:
     get:
-      summary: Get all war eras.
+      summary: Get all study profile eras.
       description: |
-        Get all war eras.
+        Get all study profile eras.
       tags:
         - DatasourcesData
       responses:
@@ -331,18 +331,18 @@ definitions:
     properties:
       warEra:
         type: string
-        description: The name of the war era.
+        description: The name of the study profile era.
       warEraCode:
         type: string
-        description: The code of the war era.
+        description: The code of the study profile era.
       warEraStartDate:
         type: string
         format: date
-        description: The start date of the war era.
+        description: The start date of the study profile era.
       warEraEndDate:
         type: string
         format: date
-        description: The end date of the war era.
+        description: The end date of the study profile era.
   MorbidityData:
     properties:
       name:

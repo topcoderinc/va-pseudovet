@@ -1,6 +1,6 @@
 """
 The datasource controller.
-Method of this controller handle requests for getting war eras and morbidities.
+Method of this controller handle requests for getting study profile eras and morbidities.
 """
 from rest.decorators import rest_mapping
 from rest.errors import BadRequestError
@@ -9,21 +9,21 @@ from flask import request
 
 
 @rest_mapping('/morbidities', ['GET'])
-def get_morbidities_for_war_era():
+def get_morbidities_for_study_profile_era():
     """
-    Get all morbidities by war name.
+    Get all morbidities by study profile name.
     :return: JSON response with all morbidities
     """
-    war_era_name = request.args.get('warEra')
-    if not war_era_name:
-        raise BadRequestError("warEra parameter is missing")
-    return datasources_service.get_morbidities_for_war_era(war_era_name)
+    study_profile_era_name = request.args.get('studyProfileEra')
+    if not study_profile_era_name:
+        raise BadRequestError("studyProfileEra parameter is missing")
+    return datasources_service.get_morbidities_for_study_profile_era(study_profile_era_name)
 
 
-@rest_mapping('/warEras', ['GET'])
-def get_war_eras():
+@rest_mapping('/studyProfileEras', ['GET'])
+def get_study_profile_eras():
     """
-    Get list of all war eras.
-    :return: JSON response with all war eras
+    Get list of all study profile eras.
+    :return: JSON response with all study profile eras
     """
-    return datasources_service.get_war_eras()
+    return datasources_service.get_study_profile_eras()

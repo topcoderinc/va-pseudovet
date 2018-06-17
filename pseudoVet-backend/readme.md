@@ -33,41 +33,41 @@
 
 These are some configuration values that can be found in config.py
 
-| configuration parameter name               | description                                             | environment key | default value                                          |
-| ------------------------------------------ | ------------------------------------------------------- | --------------- | ------------------------------------------------------ |
-| APPLICATION_ROOT                           | the rest backend endpoint route prefix                  |                 | /api/v1                                                |
-| LOG_LEVEL                                  | the backend log level                                   |                 | DEBUG                                                  |
-| LOG_FORMAT                                 | the app log message format                              |                 | %(asctime)s %(levelname)s : %(message)s                |
-| FLASK_RUN_MODE                             | the Flask run mode, DEBUG or PROD                       | MODE            | PROD                                                   |
-| WEB_PORT                                   | the Flask run web port                                  | PORT            | 5000                                                   |
-| TEMPLATES_DIR                              | the Jinja2 templates directory                          |                 | ./randomizer/templates                                 |
-| CCDA_TPL_FILENAME                          | the CCDA template file                                  |                 | continuity_of_care_document.xml                        |
-| FHIR_TPL_FILENAME                          | the FHIR template file                                  |                 | fhir/fhir_document.json                                |
-| DATASOURCES_DIR                            | the path of datasource directory                        |                 | ./randomizer/datasources                               |
-| ICD_10_CODES_FILE_PATH                     | the file with ICD-10 codes and names                    |                 | ./randomizer/datasources/ICD-10/icd10cm_codes_2018.txt |
-| DATASET_CONFIGURATIONS_DIR                 | the path of dataset config files dir                    |                 | ./output/datasetConfigurations                         |
-| GENERATED_DATASETS_DIR                     | the generated datasets file dir path                    |                 | ./output/generatedDatasets                             |
-| CONFIGURATION_PREFIX                       | the datasource config file name prefix                  |                 | DatasetConfiguration                                   |
-| DEFAULT_WAR_ERA_CODE                       | the code of war era to be used by default               |                 | world_war_ii                                           |
-| MIN_PATIENT_AGE_ON_WAR_START               | the minimum age of generated patients on war start      |                 | 18                                                     |
-| MAX_PATIENT_AGE_ON_WAR_START               | the maximum age of generated patients on war start      |                 | 40                                                     |
-| DEATH_AGE_MEAN                             | the average death age of the generated patients         |                 | 79                                                     |
-| DEATH_AGE_DEVIATION                        | the deviation of death age of the generated patients    |                 | 15                                                     |
-| MIN_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the min days from war start till 1st patient's report   |                 | 100                                                    |
-| MAX_DAYS_TILL_FIRST_REPORT_AFTER_WAR_START | the max days from war start till 1st patient's report   |                 | 20 * 365                                               |
-| MIN_DAYS_BETWEEN_FIRST_REPORT_AND_MAX_DATE | the min days between first report and death/end date    |                 | 5 * 365                                                |
-| MIN_DAYS_BETWEEN_REPORTS                   | the min days between reports for the same patient       |                 | 3 * 365                                                |
-| MAX_DAYS_BETWEEN_REPORTS                   | the max days between reports for the same patient       |                 | 10 * 365                                               |
-| MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE  | the max days between patient's birth and diagnosis date |                 | 80 * 365                                               |
-| MIN_DAYS_TILL_MORBIDITY_RESOLUTION         | the min days between morbidity diagnosis and resolution |                 | 30                                                     |
-| MAX_DAYS_TILL_MORBIDITY_RESOLUTION         | the max days between morbidity diagnosis and resolution |                 | 100                                                    |
-| DATASET_PREFIX                             | the dataset folder prefix                               |                 |                                                        |
-| FRONTEND_DIR                               | the frontend dist directory                             |                 | ./frontend/dist                                        |
+| configuration parameter name                         | description                                                       | environment key | default value                                          |
+| ---------------------------------------------------- | ----------------------------------------------------------------- | --------------- | ------------------------------------------------------ |
+| APPLICATION_ROOT                                     | the rest backend endpoint route prefix                            |                 | /api/v1                                                |
+| LOG_LEVEL                                            | the backend log level                                             |                 | DEBUG                                                  |
+| LOG_FORMAT                                           | the app log message format                                        |                 | %(asctime)s %(levelname)s : %(message)s                |
+| FLASK_RUN_MODE                                       | the Flask run mode, DEBUG or PROD                                 | MODE            | PROD                                                   |
+| WEB_PORT                                             | the Flask run web port                                            | PORT            | 5000                                                   |
+| TEMPLATES_DIR                                        | the Jinja2 templates directory                                    |                 | ./randomizer/templates                                 |
+| CCDA_TPL_FILENAME                                    | the CCDA template file                                            |                 | continuity_of_care_document.xml                        |
+| FHIR_TPL_FILENAME                                    | the FHIR template file                                            |                 | fhir/fhir_document.json                                |
+| DATASOURCES_DIR                                      | the path of datasource directory                                  |                 | ./randomizer/datasources                               |
+| ICD_10_CODES_FILE_PATH                               | the file with ICD-10 codes and names                              |                 | ./randomizer/datasources/ICD-10/icd10cm_codes_2018.txt |
+| DATASET_CONFIGURATIONS_DIR                           | the path of dataset config files dir                              |                 | ./output/datasetConfigurations                         |
+| GENERATED_DATASETS_DIR                               | the generated datasets file dir path                              |                 | ./output/generatedDatasets                             |
+| CONFIGURATION_PREFIX                                 | the datasource config file name prefix                            |                 | DatasetConfiguration                                   |
+| DEFAULT_STUDY_PROFILE_ERA_CODE                       | the code of study profile era to be used by default               |                 | world_war_ii                                           |
+| MIN_PATIENT_AGE_ON_STUDY_PROFILE_START               | the minimum age of generated patients on study profile start      |                 | 18                                                     |
+| MAX_PATIENT_AGE_ON_STUDY_PROFILE_START               | the maximum age of generated patients on study profile start      |                 | 40                                                     |
+| DEATH_AGE_MEAN                                       | the average death age of the generated patients                   |                 | 79                                                     |
+| DEATH_AGE_DEVIATION                                  | the deviation of death age of the generated patients              |                 | 15                                                     |
+| MIN_DAYS_TILL_FIRST_REPORT_AFTER_STUDY_PROFILE_START | the min days from study profile start till 1st patient's report   |                 | 100                                                    |
+| MAX_DAYS_TILL_FIRST_REPORT_AFTER_STUDY_PROFILE_START | the max days from study profile start till 1st patient's report   |                 | 20 * 365                                               |
+| MIN_DAYS_BETWEEN_FIRST_REPORT_AND_MAX_DATE           | the min days between first report and death/end date              |                 | 5 * 365                                                |
+| MIN_DAYS_BETWEEN_REPORTS                             | the min days between reports for the same patient                 |                 | 3 * 365                                                |
+| MAX_DAYS_BETWEEN_REPORTS                             | the max days between reports for the same patient                 |                 | 10 * 365                                               |
+| MAX_DAYS_BETWEEN_BIRTH_AND_DIAGNOSIS_DATE            | the max days between patient's birth and diagnosis date           |                 | 80 * 365                                               |
+| MIN_DAYS_TILL_MORBIDITY_RESOLUTION                   | the min days between morbidity diagnosis and resolution           |                 | 30                                                     |
+| MAX_DAYS_TILL_MORBIDITY_RESOLUTION                   | the max days between morbidity diagnosis and resolution           |                 | 100                                                    |
+| DATASET_PREFIX                                       | the dataset folder prefix                                         |                 |                                                        |
+| FRONTEND_DIR                                         | the frontend dist directory                                       |                 | ./frontend/dist                                        |
 
 ## Dataset configuration files
 
 The recent version of tha applications support generation of reports based on JSON dataset configuration files that have the following format (note that comments are not allowed in real JSON files, all parameters are shown for clarity only, some of them conflict with each other and cannot appear at the same time):
-```js
+```json
 {
    // The title of the dataset configuraton. Is required when saving/retrieving configs via REST API.
    // Must not contain any characters that cannot be part of a valid file name.
@@ -92,7 +92,7 @@ The recent version of tha applications support generation of reports based on JS
       // The number of patients in the generated dataset with this morbidity.
       // Optional. When this parameter is specified, percentOfPopulationWithDiagnosisRisk
       // and percentOfProbabilityToAcquireDiagnosis are ignored
-      "numberOfEncounters" 20,
+      "numberOfEncounters": 20,
       // The percentage (0-100) of patients who could potentially be affected by this morbidity
       // Optional. Is ignored when numberOfEncounters is specified.
       // Default is 100.
@@ -116,16 +116,16 @@ The recent version of tha applications support generation of reports based on JS
   // Optional. Default is "./output/generatedDatasets".
   "outputFolder": "./output/generatedDatasets",
   // All patients are veterans of the war era specified in the below parameter
-  "warEra": {
-    // The name of war era. Is required in dataset configuration REST API.
-    // Is optional in generation routines only if warEraCode is specified.
-    "warEra": "World War II",
-    // The code of the war era. Is optional when warEra (war name) is specified.
-    "warEraCode": "world_war_ii",
-    // The end date of the war era. Optional.
-    "warEraEndDate": "Tue, 31 Dec 1946 00:00:00 GMT",
-    // The start date of the war era. Optional.
-    "warEraStartDate": "Sun, 07 Dec 1941 00:00:00 GMT"
+  "studyProfileEra": {
+    // The name of study profile era. Is required in dataset configuration REST API.
+    // Is optional in generation routines only if studyProfileEraCode is specified.
+    "studyProfileEra": "World War II",
+    // The code of the study profile era. Is optional when studyProfileEra (study profile name) is specified.
+    "studyProfileEraCode": "world_war_ii",
+    // The end date of the study profile era. Optional.
+    "studyProfileEraEndDate": "Tue, 31 Dec 1946 00:00:00 GMT",
+    // The start date of the study profile era. Optional.
+    "studyProfileEraStartDate": "Sun, 07 Dec 1941 00:00:00 GMT"
   },
   // the output format, CCDA,FHIR-XML,or FHIR-JSON
   "outputFormat":"CCDA",
