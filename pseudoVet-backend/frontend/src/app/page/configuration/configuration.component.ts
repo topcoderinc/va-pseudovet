@@ -52,7 +52,7 @@ export class ConfigurationComponent implements OnInit {
   dashboard = true;
 
   /* backend data */
-  warEars = [];
+  studyProfiles = [];
   morbidities = [];
 
   constructor (private route: ActivatedRoute,
@@ -100,7 +100,7 @@ export class ConfigurationComponent implements OnInit {
 
     // fetch study profiles
     dataService.getStudyProfiles().then(res => {
-      this.warEars = res;
+      this.studyProfiles = res;
       if (this.configurationData.studyProfile) {
         this.onWarSelected(this.configurationData.studyProfile);
       }
@@ -120,7 +120,7 @@ export class ConfigurationComponent implements OnInit {
    */
   onWarSelected (value) {
     this.configurationData.studyProfile = value;
-    const studyProfile = this.warEars.find(w => w.studyProfile === value);
+    const studyProfile = this.studyProfiles.find(w => w.studyProfile === value);
     if (!!studyProfile) {
       this.configurationData.studyProfileStart = this.getDMYByTimeString(studyProfile.studyProfileStartDate);
       this.configurationData.studyProfileEnd = this.getDMYByTimeString(studyProfile.studyProfileEndDate);
@@ -473,7 +473,7 @@ export class ConfigurationComponent implements OnInit {
         percentOfPopulationWithDiagnosisRisk: this.toFloat(m.diagnosis),
         percentOfProbabilityToAcquireDiagnosis: this.toFloat(m.acquires),
       })),
-      studyProfile: this.warEars.find(w => w.studyProfile === frontendConfig.studyProfile),
+      studyProfile: this.studyProfiles.find(w => w.studyProfile === frontendConfig.studyProfile),
       outputFormat: frontendConfig.outputFormat,
       year: parseInt(frontendConfig.year, 10)
     };
