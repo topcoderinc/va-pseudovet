@@ -48,8 +48,8 @@ CONFIGURATION_PREFIX = 'DatasetConfiguration'
 # the datasets directory prefix
 DATASET_PREFIX = 'Dataset'
 
-# the code of the default study profile era
-DEFAULT_STUDY_PROFILE_ERA_CODE = 'world_war_ii'
+# the code of the default study profile
+DEFAULT_STUDY_PROFILE_CODE = 'world_war_ii'
 
 # the minimum age of generated patients on study profile start
 MIN_PATIENT_AGE_ON_STUDY_PROFILE_START = 18

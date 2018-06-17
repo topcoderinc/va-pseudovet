@@ -14,18 +14,18 @@ from config import GENERATED_DATASETS_DIR, DATASET_CONFIGURATIONS_DIR, CONFIGURA
 from randomizer.pseudo_vets import get_icd_morbidity_name_by_code
 from rest.decorators import service, custom_validators
 from rest.errors import EntityNotFoundError, InnerServerError, BadRequestError
-from rest.services.datasources_service import get_study_profile_era_by_name, get_morbidities_from_study_profile_code, \
+from rest.services.datasources_service import get_study_profile_by_name, get_morbidities_from_study_profile_code, \
     convert_raw_study_profile
 
 from flask.json import dumps, load
 
-# the study profile era validation schema
-study_profile_era_schema = {
-    'studyProfileEra': {'type': 'string', 'required': True},
-    'studyProfileEraCode': {'type': 'string'},
-    'studyProfileEraStartDate': {'type': 'string'},
+# the study profile validation schema
+study_profile_schema = {
+    'studyProfile': {'type': 'string', 'required': True},
+    'studyProfileCode': {'type': 'string'},
+    'studyProfileStartDate': {'type': 'string'},
     'percentage': {'type': 'float'},
-    'studyProfileEraEndDate': {'type': 'string'},
+    'studyProfileEndDate': {'type': 'string'},
 }
 
 # the morbidity validation schema
@@ -51,7 +51,7 @@ relatedConditions_schema = {
 # the configuration validation schema
 dataset_configuration_schema = {
     'title': {'type': 'string', 'required': True},
-    'studyProfileEra': {'type': 'dict', 'schema': study_profile_era_schema, 'required': True},
+    'studyProfile': {'type': 'dict', 'schema': study_profile_schema, 'required': True},
     'numberOfPatients': {'type': 'integer', 'required': True},
     'maleRatio': {'type': 'float', 'required': False},
     'femaleRatio': {'type': 'float', 'required': False},
@@ -102,18 +102,18 @@ custom_validators.append(validate_document)
 )
 def save(body_entity):
     """
-    Check whether the body entity studyProfileEra and morbidities exist or not.
+    Check whether the body entity studyProfile and morbidities exist or not.
     Then save it to the local file system.
     :param body_entity: the request dataset configuration entity
     :return: the same fully populated dataset configuration entity
     """
 
-    # make sure study profile era exists
-    study_profile_era = get_study_profile_era_by_name(body_entity['studyProfileEra']['studyProfileEra'])
-    # update request study profile era
-    body_entity['studyProfileEra'] = convert_raw_study_profile(study_profile_era)
+    # make sure study profile exists
+    study_profile = get_study_profile_by_name(body_entity['studyProfile']['studyProfile'])
+    # update request study profile
+    body_entity['studyProfile'] = convert_raw_study_profile(study_profile)
 
-    total_morbidities = get_morbidities_from_study_profile_code(study_profile_era['study_profile_code'])
+    total_morbidities = get_morbidities_from_study_profile_code(study_profile['study_profile_code'])
 
     for request_morbidity in body_entity['morbiditiesData']:
         morbidity_code = request_morbidity['icd10Code']

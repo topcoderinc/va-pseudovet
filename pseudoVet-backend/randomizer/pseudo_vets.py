@@ -99,7 +99,7 @@ def load_datasources():
         logger.error('Datasource not defined. Cannot continue.')
         exit(1)
 
-    # load all study profile eras
+    # load all study profiles
     military_eras = get_study_profiles_from_file()
 
     # load ICD-10 code/name pairs
@@ -152,11 +152,11 @@ def timedelta_years(years):
     return timedelta(days=years * DAYS_IN_YEAR)
 
 
-def random_patient(index, study_profile_era, end_year):
+def random_patient(index, study_profile, end_year):
     """
     Build a patient record to be used as base for template rendering and aging
     :param index: the 1-based index of the patient in the current dataset
-    :param study_profile_era: the study profile era entity
+    :param study_profile: the study profile entity
     :param end_year: the end year for generated reports
     :return: None
     """
@@ -168,7 +168,7 @@ def random_patient(index, study_profile_era, end_year):
     # initialize dictionary with patient data
     patient = {
         'index': index,
-        'study_profile': study_profile_era,
+        'study_profile': study_profile,
         'patient_id': patient_id,
         'icd_problems': [],
         'expected_problems': []
@@ -178,7 +178,7 @@ def random_patient(index, study_profile_era, end_year):
     age_on_study_profile_start = randint(MIN_PATIENT_AGE_ON_STUDY_PROFILE_START, MAX_PATIENT_AGE_ON_STUDY_PROFILE_START)
 
     # generate random birth date
-    study_profile_start_date = study_profile_era['start_date']
+    study_profile_start_date = study_profile['start_date']
     date_of_birth = study_profile_start_date - timedelta_years(age_on_study_profile_start) - timedelta(days=randint(0, 365))
     patient['date_of_birth'] = date_of_birth
 
@@ -462,10 +462,10 @@ def apply_morbidity(patients, morbidity_data):
         })
 
 
-def generate_records(study_profile_era, patients_num, male_perc, morbidities_data, end_year, output_format):
+def generate_records(study_profile, patients_num, male_perc, morbidities_data, end_year, output_format):
     """
     Generates dataset record files using the specified parameters.
-    :param study_profile_era: the study profile era data dictionary (just name of code can be specified)
+    :param study_profile: the study profile data dictionary (just name of code can be specified)
     :param patients_num: the number of patients
     :param male_perc: the male percentage of patients (between 0 and 100)
     :param morbidities_data: the list with morbidities details
@@ -476,7 +476,7 @@ def generate_records(study_profile_era, patients_num, male_perc, morbidities_dat
     logger.info('Creating {0} fictional patient{1}...'.format(patients_num, "s" if patients_num > 1 else ""))
 
     # first generate required number of random patients
-    patients = [random_patient(idx, study_profile_era, end_year) for idx in range(1, patients_num + 1)]
+    patients = [random_patient(idx, study_profile, end_year) for idx in range(1, patients_num + 1)]
 
     set_gender_fields(patients, male_perc)
 
@@ -517,25 +517,25 @@ def generate_records(study_profile_era, patients_num, male_perc, morbidities_dat
     return files_num
 
 
-def get_full_study_profile_era(study_profile_era):
+def get_full_study_profile(study_profile):
     """
-    Get full study profile era data by its name or code
-    :param study_profile_era: the dictionary with available study profile era data (name or code)
-    :return: the dictionary with full study profile era data or None if not found
+    Get full study profile data by its name or code
+    :param study_profile: the dictionary with available study profile data (name or code)
+    :return: the dictionary with full study profile data or None if not found
     """
     study_profiles = get_study_profiles_from_file()
 
-    # try to find study profile era by name
-    if 'studyProfileEra' in study_profile_era:
-        study_profile_name = study_profile_era['studyProfileEra']
+    # try to find study profile by name
+    if 'studyProfile' in study_profile:
+        study_profile_name = study_profile['studyProfile']
         filtered_study_profiles = list(filter(lambda w: w['study_profile_name'] == study_profile_name, study_profiles))
         if len(filtered_study_profiles) == 0:
             return None
         return filtered_study_profiles[0]
 
-    # try to find study profile era by code
-    if 'studyProfileEraCode' in study_profile_era:
-        study_profile_code = study_profile_era['studyProfileEraCode']
+    # try to find study profile by code
+    if 'studyProfileCode' in study_profile:
+        study_profile_code = study_profile['studyProfileCode']
         filtered_study_profiles = list(filter(lambda w: w['study_profile_code'] == study_profile_code, study_profiles))
         if len(filtered_study_profiles) == 0:
             return None
@@ -552,12 +552,12 @@ def generate_from_config(dataset_config):
     """
 
     output_format = dataset_config.get('outputFormat', 'CCDA')
-    if 'studyProfileEra' not in dataset_config:
-        raise ValueError('Study profile era is missing in the dataset configuration')
-    study_profile_era = dataset_config['studyProfileEra']
-    full_study_profile_era = get_full_study_profile_era(study_profile_era)
-    if full_study_profile_era is None:
-        raise ValueError('Invalid study profile era is specified in the dataset configuration: {0}'.format(study_profile_era))
+    if 'studyProfile' not in dataset_config:
+        raise ValueError('Study profile is missing in the dataset configuration')
+    study_profile = dataset_config['studyProfile']
+    full_study_profile = get_full_study_profile(study_profile)
+    if full_study_profile is None:
+        raise ValueError('Invalid study profile is specified in the dataset configuration: {0}'.format(study_profile))
 
     if 'numberOfPatients' not in dataset_config:
         raise ValueError('Number of patients is missing in the dataset configuration')
@@ -583,7 +583,7 @@ def generate_from_config(dataset_config):
     if 'year' not in dataset_config:
         raise ValueError('End report year is missing in the dataset configuration')
     end_year = dataset_config['year']
-    if end_year <= full_study_profile_era['start_date'].year:
+    if end_year <= full_study_profile['start_date'].year:
         raise ValueError('End report year must be greater than start date')
 
     # setup output directory
@@ -595,16 +595,16 @@ def generate_from_config(dataset_config):
     # retrieve morbidities from configuration or data source
     morbidities_data = None
     if 'morbiditiesData' not in dataset_config:
-        study_profile_code = full_study_profile_era['study_profile_code']
+        study_profile_code = full_study_profile['study_profile_code']
         try:
-            dataset_config['morbiditiesData'] = get_morbidities_from_study_profile_code(full_study_profile_era['study_profile_code'],
+            dataset_config['morbiditiesData'] = get_morbidities_from_study_profile_code(full_study_profile['study_profile_code'],
                                                                                         include_percentage=True)
         except EntityNotFoundError:
-            raise ValueError('CSV file for study profile era with code {0} does not exist'.format(study_profile_code))
+            raise ValueError('CSV file for study profile with code {0} does not exist'.format(study_profile_code))
         logger.info('Using morbidity probabilities of {0} from configuration file'.format(study_profile_code))
     morbidities_data = dataset_config['morbiditiesData']
 
     if ('relatedConditionsData' in dataset_config) and (len(dataset_config['relatedConditionsData']) > 0):
         morbidities_data.extend(dataset_config['relatedConditionsData'])
 
-    return generate_records(full_study_profile_era, patients_num, male_ratio, morbidities_data, end_year, output_format)
+    return generate_records(full_study_profile, patients_num, male_ratio, morbidities_data, end_year, output_format)

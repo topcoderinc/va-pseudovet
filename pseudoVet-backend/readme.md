@@ -48,7 +48,7 @@ These are some configuration values that can be found in config.py
 | DATASET_CONFIGURATIONS_DIR                           | the path of dataset config files dir                              |                 | ./output/datasetConfigurations                         |
 | GENERATED_DATASETS_DIR                               | the generated datasets file dir path                              |                 | ./output/generatedDatasets                             |
 | CONFIGURATION_PREFIX                                 | the datasource config file name prefix                            |                 | DatasetConfiguration                                   |
-| DEFAULT_STUDY_PROFILE_ERA_CODE                       | the code of study profile era to be used by default               |                 | world_war_ii                                           |
+| DEFAULT_STUDY_PROFILE_CODE                       | the code of study profile to be used by default               |                 | world_war_ii                                           |
 | MIN_PATIENT_AGE_ON_STUDY_PROFILE_START               | the minimum age of generated patients on study profile start      |                 | 18                                                     |
 | MAX_PATIENT_AGE_ON_STUDY_PROFILE_START               | the maximum age of generated patients on study profile start      |                 | 40                                                     |
 | DEATH_AGE_MEAN                                       | the average death age of the generated patients                   |                 | 79                                                     |
@@ -115,17 +115,17 @@ The recent version of tha applications support generation of reports based on JS
   // The folder that will contain a subfolder (with name generated from timestamp) with all the generated report files.
   // Optional. Default is "./output/generatedDatasets".
   "outputFolder": "./output/generatedDatasets",
-  // All patients are veterans of the study profile era specified in the below parameter
-  "studyProfileEra": {
-    // The name of study profile era. Is required in dataset configuration REST API.
-    // Is optional in generation routines only if studyProfileEraCode is specified.
-    "studyProfileEra": "World War II",
-    // The code of the study profile era. Is optional when studyProfileEra (study profile name) is specified.
-    "studyProfileEraCode": "world_war_ii",
-    // The end date of the study profile era. Optional.
-    "studyProfileEraEndDate": "Tue, 31 Dec 1946 00:00:00 GMT",
-    // The start date of the study profile era. Optional.
-    "studyProfileEraStartDate": "Sun, 07 Dec 1941 00:00:00 GMT"
+  // All patients are veterans of the study profile specified in the below parameter
+  "studyProfile": {
+    // The name of study profile. Is required in dataset configuration REST API.
+    // Is optional in generation routines only if studyProfileCode is specified.
+    "studyProfile": "World War II",
+    // The code of the study profile. Is optional when studyProfile (study profile name) is specified.
+    "studyProfileCode": "world_war_ii",
+    // The end date of the study profile. Optional.
+    "studyProfileEndDate": "Tue, 31 Dec 1946 00:00:00 GMT",
+    // The start date of the study profile. Optional.
+    "studyProfileStartDate": "Sun, 07 Dec 1941 00:00:00 GMT"
   },
   // the output format, CCDA,FHIR-XML,or FHIR-JSON
   "outputFormat": "CCDA",

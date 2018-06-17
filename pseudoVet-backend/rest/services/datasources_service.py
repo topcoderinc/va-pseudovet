@@ -13,7 +13,7 @@ from rest.logger import logger
 from config import DATASOURCES_DIR
 from rest.errors import EntityNotFoundError
 
-# use this list to cache study profile eras data
+# use this list to cache study profiles data
 military_eras = None
 
 # use the map to cache morbidities data, the cache key is the study_profile_code
@@ -21,23 +21,23 @@ morbidity_map = {}
 
 
 @service(
-    schema={'study_profile_era': {'type': 'string', 'required': True}}
+    schema={'study_profile': {'type': 'string', 'required': True}}
 )
-def get_morbidities_for_study_profile_era(study_profile_era):
+def get_morbidities_for_study_profile(study_profile):
     """
-    get morbidities data by study_profile_era name , it will return 404 if didn't found study_profile_era
-    :param study_profile_era: the study profile era name
+    get morbidities data by study_profile name , it will return 404 if didn't found study_profile
+    :param study_profile: the study profile name
     :return: the morbidities data
     """
-    study_profile_code = get_study_profile_era_by_name(study_profile_era)['study_profile_code']
+    study_profile_code = get_study_profile_by_name(study_profile)['study_profile_code']
     return get_morbidities_from_study_profile_code(study_profile_code)
 
 
 @service()
-def get_study_profile_eras():
+def get_study_profiles():
     """
-    Get data for all study profile eras
-    :return:  the list with study profile eras data
+    Get data for all study profiles
+    :return:  the list with study profiles data
     """
     study_profile_list = get_study_profiles_from_file()
     return list(map(lambda study_profile: convert_raw_study_profile(study_profile), study_profile_list))
@@ -50,23 +50,23 @@ def convert_raw_study_profile(study_profile):
     :return: the request study profile
     """
     return {
-        'studyProfileEra': study_profile['study_profile_name'],
-        'studyProfileEraCode': study_profile['study_profile_code'],
-        'studyProfileEraStartDate': study_profile['start_date'],
-        'studyProfileEraEndDate': study_profile['end_date']
+        'studyProfile': study_profile['study_profile_name'],
+        'studyProfileCode': study_profile['study_profile_code'],
+        'studyProfileStartDate': study_profile['start_date'],
+        'studyProfileEndDate': study_profile['end_date']
     }
 
 
-def get_study_profile_era_by_name(name):
+def get_study_profile_by_name(name):
     """
-    Get study profile era by its name. Raises EntityNotFoundError if not found.
+    Get study profile by its name. Raises EntityNotFoundError if not found.
     :param name: the study profile name
-    :return: the study profile era details
+    :return: the study profile details
     """
     study_profiles = get_study_profiles_from_file()
     filter_study_profiles = list(filter(lambda w: w['study_profile_name'] == name, study_profiles))
     if len(filter_study_profiles) <= 0:
-        raise EntityNotFoundError('Cannot find study profile era with name ' + name)
+        raise EntityNotFoundError('Cannot find study profile with name ' + name)
     return filter_study_profiles[0]
 
 
@@ -118,8 +118,8 @@ def str_to_datetime(str_time):
 
 def get_study_profiles_from_file():
     """
-    Get study profile eras from file. Return cache result if data is already cached.
-    :return: the study profile eras
+    Get study profiles from file. Return cache result if data is already cached.
+    :return: the study profiles
     """
     global military_eras
     if military_eras is not None:

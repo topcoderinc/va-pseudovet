@@ -237,15 +237,15 @@ paths:
     get:
       summary: Get morbidities.
       description: |
-        Get all morbidities for study profile era.
+        Get all morbidities for study profile.
       tags:
         - DatasourcesData
       parameters:
-        - name: studyProfileEra
+        - name: studyProfile
           in: query
           type: string
           required: true
-          description: the study profile era
+          description: the study profile
       responses:
         '200':
           description: The operation succeeded. The entities will be returned.
@@ -265,11 +265,11 @@ paths:
             the operation failed on the server side
           schema:
             $ref: '#/definitions/Error'
-  /studyProfileEras:
+  /studyProfiles:
     get:
-      summary: Get all study profile eras.
+      summary: Get all study profiles.
       description: |
-        Get all study profile eras.
+        Get all study profiles.
       tags:
         - DatasourcesData
       responses:
@@ -297,7 +297,7 @@ definitions:
       title:
         type: string
         description: The title.
-      studyProfileEra:
+      studyProfile:
         $ref: '#/definitions/StudyProfileEraInfo'
       numberOfPatients:
         type: integer
@@ -329,20 +329,20 @@ definitions:
         description: The report end year.
   StudyProfileEraInfo:
     properties:
-      studyProfileEra:
+      studyProfile:
         type: string
-        description: The name of the study profile era.
-      studyProfileEraCode:
+        description: The name of the study profile.
+      studyProfileCode:
         type: string
-        description: The code of the study profile era.
-      studyProfileEraStartDate:
-        type: string
-        format: date
-        description: The start date of the study profile era.
-      studyProfileEraEndDate:
+        description: The code of the study profile.
+      studyProfileStartDate:
         type: string
         format: date
-        description: The end date of the study profile era.
+        description: The start date of the study profile.
+      studyProfileEndDate:
+        type: string
+        format: date
+        description: The end date of the study profile.
   MorbidityData:
     properties:
       name:

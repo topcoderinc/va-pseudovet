@@ -62,7 +62,7 @@ Options:
     -c path         Path to the dataset configuration file.
     -t title        Title of dataset configuration to be used.
       At maximum one of -c and -t switches is expected to be specified.
-    -s code         Code of study profile era for which records are created.
+    -s code         Code of study profile for which records are created.
       E.g. world_war_ii, vietnam_war, korean_conflict or gulf_war.
       Can override value specified in dataset configuration file.
       Default is world_war_ii.
