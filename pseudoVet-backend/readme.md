@@ -115,7 +115,7 @@ The recent version of tha applications support generation of reports based on JS
   // The folder that will contain a subfolder (with name generated from timestamp) with all the generated report files.
   // Optional. Default is "./output/generatedDatasets".
   "outputFolder": "./output/generatedDatasets",
-  // All patients are veterans of the war era specified in the below parameter
+  // All patients are veterans of the study profile era specified in the below parameter
   "studyProfileEra": {
     // The name of study profile era. Is required in dataset configuration REST API.
     // Is optional in generation routines only if studyProfileEraCode is specified.

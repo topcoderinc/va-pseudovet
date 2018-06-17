@@ -241,7 +241,7 @@ paths:
       tags:
         - DatasourcesData
       parameters:
-        - name: warEra
+        - name: studyProfileEra
           in: query
           type: string
           required: true
@@ -265,7 +265,7 @@ paths:
             the operation failed on the server side
           schema:
             $ref: '#/definitions/Error'
-  /warEras:
+  /studyProfileEras:
     get:
       summary: Get all study profile eras.
       description: |
@@ -278,7 +278,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/WarEraInfo'
+              $ref: '#/definitions/StudyProfileEraInfo'
         '400':
           description: >-
             BAD REQUEST - if there was problem with the request (e.g. malformed
@@ -297,8 +297,8 @@ definitions:
       title:
         type: string
         description: The title.
-      warEra:
-        $ref: '#/definitions/WarEraInfo'
+      studyProfileEra:
+        $ref: '#/definitions/StudyProfileEraInfo'
       numberOfPatients:
         type: integer
         description: The number of patients.
@@ -327,19 +327,19 @@ definitions:
       year:
         type: integer
         description: The report end year.
-  WarEraInfo:
+  StudyProfileEraInfo:
     properties:
-      warEra:
+      studyProfileEra:
         type: string
         description: The name of the study profile era.
-      warEraCode:
+      studyProfileEraCode:
         type: string
         description: The code of the study profile era.
-      warEraStartDate:
+      studyProfileEraStartDate:
         type: string
         format: date
         description: The start date of the study profile era.
-      warEraEndDate:
+      studyProfileEraEndDate:
         type: string
         format: date
         description: The end date of the study profile era.

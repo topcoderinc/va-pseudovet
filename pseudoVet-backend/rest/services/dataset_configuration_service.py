@@ -19,7 +19,7 @@ from rest.services.datasources_service import get_study_profile_era_by_name, get
 
 from flask.json import dumps, load
 
-# the war era validation schema
+# the study profile era validation schema
 study_profile_era_schema = {
     'studyProfileEra': {'type': 'string', 'required': True},
     'studyProfileEraCode': {'type': 'string'},
@@ -108,16 +108,16 @@ def save(body_entity):
     :return: the same fully populated dataset configuration entity
     """
 
-    # make sure war era exists
+    # make sure study profile era exists
     study_profile_era = get_study_profile_era_by_name(body_entity['studyProfileEra']['studyProfileEra'])
-    # update request war era
+    # update request study profile era
     body_entity['studyProfileEra'] = convert_raw_study_profile(study_profile_era)
 
     total_morbidities = get_morbidities_from_study_profile_code(study_profile_era['study_profile_code'])
 
     for request_morbidity in body_entity['morbiditiesData']:
         morbidity_code = request_morbidity['icd10Code']
-        # check whether morbidity exists in CSV file of the specified war
+        # check whether morbidity exists in CSV file of the specified study profile
         morbidity_exists = False
         for morbidity in total_morbidities:
             if morbidity_code == morbidity['icd10Code']:
