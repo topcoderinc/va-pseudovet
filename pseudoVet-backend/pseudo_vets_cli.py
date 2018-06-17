@@ -5,7 +5,7 @@ Creates C-CDA conformant documents of fictional patients using random data and
 optional dataset configuration parameters.
 
 Usage:
-  pseudo-vets.py [-c path] [-t title] [-w code] [-n number] [-o output] [-y year]
+  pseudo-vets.py [-c path] [-t title] [-s code] [-n number] [-o output] [-y year]
 
 Options:
     -c path         Path to the dataset configuration file.
