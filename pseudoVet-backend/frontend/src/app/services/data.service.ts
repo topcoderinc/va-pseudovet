@@ -33,7 +33,7 @@ export class DataService {
    * @param {string} studyProfileName
    * @return {Array} the morbidities
    */
-  getMorbiditiesByWarName (studyProfileName: string) {
+  getMorbiditiesByStudyProfileName (studyProfileName: string) {
     return this.http.get(`${environment.baseUri}/morbidities?studyProfile=${studyProfileName}`).toPromise();
   }
 

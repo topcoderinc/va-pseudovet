@@ -102,7 +102,7 @@ export class ConfigurationComponent implements OnInit {
     dataService.getStudyProfiles().then(res => {
       this.studyProfiles = res;
       if (this.configurationData.studyProfile) {
-        this.onWarSelected(this.configurationData.studyProfile);
+        this.onStudyProfileSelected(this.configurationData.studyProfile);
       }
     }).catch(err => {
       console.error(err);
@@ -118,7 +118,7 @@ export class ConfigurationComponent implements OnInit {
    * on study profile selected
    * @param value the study profile code
    */
-  onWarSelected (value) {
+  onStudyProfileSelected (value) {
     this.configurationData.studyProfile = value;
     const studyProfile = this.studyProfiles.find(s => s.studyProfile === value);
     if (!!studyProfile) {
@@ -209,7 +209,7 @@ export class ConfigurationComponent implements OnInit {
   onNextClick () {
     this.selectedTab = this.selectedTab + 1;
     if (this.selectedTab === 2) { // this mean switch to MORBIDITY
-      this.dataService.getMorbiditiesByWarName(this.configurationData.studyProfile).then(res => {
+      this.dataService.getMorbiditiesByStudyProfileName(this.configurationData.studyProfile).then(res => {
         this.morbidities = res as any;
         this.configurationData.configurations = intersectionBy(this.configurationData.configurations,
                this.morbidities, 'icd10Code');
