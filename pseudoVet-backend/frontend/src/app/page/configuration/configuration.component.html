@@ -139,7 +139,7 @@
               (change)="onStudyProfileSelected($event.target.value)"
               class="form-element">
               <option value=""></option>
-              <option *ngFor="let study profile of studyProfiles"
+              <option *ngFor="let studyProfile of studyProfiles"
                       [selected]="configurationData.studyProfile===studyProfile.studyProfile"
                       [value]="studyProfile.studyProfile">{{studyProfile.studyProfile}}
               </option>
@@ -147,7 +147,7 @@
           </div>
 
 
-          <!-- study profile start year -->
+          <!-- studyProfile start year -->
           <div class="sec-4">
             <label class="label-element">Start Date</label>
             <input appNumber [value]="configurationData.studyProfileStart.d"
@@ -163,7 +163,7 @@
                    type="text" class="form-element year" maxlength="4" readonly/>
           </div>
 
-          <!-- study profile end year -->
+          <!-- studyProfile end year -->
           <div class="sec-4">
             <label class="label-element">End Date</label>
             <input appNumber [ngModel]="31"
