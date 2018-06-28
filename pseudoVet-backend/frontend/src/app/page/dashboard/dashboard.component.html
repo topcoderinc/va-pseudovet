@@ -103,7 +103,7 @@
           <th>CONFIGURATION TITLE</th>
           <th class="format">OUTPUT FORMAT</th>
           <th colspan="2" class="with-button">GENERAL DEMOGRAPHICS
-            <small>(War Era / Patients / Gender ratio)</small>
+            <small>(Study Profile / Patients / Gender ratio)</small>
           </th>
         </tr>
         <tr *ngFor="let item of configurations; let $i=index">
@@ -112,7 +112,7 @@
             <span class="number">{{$i + 1}}</span></td>
           <td>{{item.title}}</td>
           <td>{{item.outputFormat}}</td>
-          <td>{{item.warEra.warEra + ' / ' + getPatientsAndRadioLabel(item)}}
+          <td>{{item.studyProfile.studyProfile + ' / ' + getPatientsAndRadioLabel(item)}}
           </td>
           <td class="action-button">
             <button (click)="generateDataset($i)" class="small-button large">Generate Dataset</button>
@@ -143,7 +143,7 @@
           <th class="progress">PROGRESS</th>
           <th class="completed-td">COMPLETED ON</th>
           <th colspan="2" class="with-button generated-table">GENERAL DEMOGRAPHICS
-            <small>(War Era / Patients / Gender ratio)</small>
+            <small>(Study Profile / Patients / Gender ratio)</small>
           </th>
         </tr>
         <tr *ngFor="let dataset of datasets; let $i=index">
@@ -153,10 +153,12 @@
           </td>
           <td>{{dataset.title}}</td>
           <td>{{dataset.outputFormat}}</td>
+
           <td>{{dataset.status}}</td>
           <td>{{getProgressValue(dataset.progress)}}%</td>
-          <td>{{dataset.completedOn === 'N/A' ? 'N/A': (dataset.completedOn | date:'yyyy-MM-dd HH:mm:ss')}}</td>
-          <td>{{dataset.configuration.warEra.warEra + ' / '
+          <td>{{dataset.completedOn | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+          <td>{{dataset.configuration.studyProfile.studyProfile + ' / '
+            + dataset.configuration.numberOfPatients.toLocaleString() + ' / '
             + getPatientsAndRadioLabel(dataset.configuration)}}
           </td>
           <td class="action-button generated-table">
