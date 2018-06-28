@@ -17,7 +17,8 @@ from rest.errors import EntityNotFoundError, InnerServerError, BadRequestError
 
 from rest.services.datasources_service import get_study_profile_by_name, get_morbidities_from_study_profile_code, \
     convert_raw_study_profile
-
+    configurations_map = {}
+    
 from flask.json import dumps, load
 
 # the study profile validation schema
