@@ -14,10 +14,11 @@ from config import GENERATED_DATASETS_DIR, DATASET_CONFIGURATIONS_DIR, CONFIGURA
 from randomizer.pseudo_vets import get_icd_morbidity_name_by_code
 from rest.decorators import service, custom_validators
 from rest.errors import EntityNotFoundError, InnerServerError, BadRequestError
+from rest.logger import logger
 
-from rest.services.datasources_service import get_study_profile_by_name, get_morbidities_from_study_profile_code, \
-    convert_raw_study_profile
-    configurations_map = {}
+from rest.services.datasources_service import get_study_profile_by_name, get_morbidities_from_study_profile_code, convert_raw_study_profile
+
+configurations_map = {}
     
 from flask.json import dumps, load
 
