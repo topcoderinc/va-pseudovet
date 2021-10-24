@@ -23,7 +23,7 @@
     "@angular/router": "^5.2.0",
     "@ngx-progressbar/core": "^4.1.1",
     "@ngx-progressbar/http": "^4.1.1",
-    "core-js": "^2.4.1",
+    "core-js": "^2.6.12",
     "file-saver": "^1.3.3",
     "lodash": "^4.17.5",
     "ngx-toastr": "^8.2.1",
